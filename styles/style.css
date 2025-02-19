@@ -1,0 +1,85 @@
+@font-face {
+    font-family: "productsans";
+    src: url("sans/productsans.ttf") format("truetype");
+    font-style: normal;
+    font-weight: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "productsans";
+}
+
+body {
+    background-color: #FFFFFF;
+}
+.menu{
+    background-color: #F1F3F4; /*молочно-бежевый с прозрачностью*/
+    width: 100vw;
+    height: 50px;
+    display: flex;
+    align-items: center; /* Центрирует по вертикали */
+
+}
+
+.logo{
+    height: 100%;
+    width: 20%;
+    display: flex;
+    justify-content: center; /* Центрирует по горизонтали */
+    align-items: center; /* Центрирует по вертикали */
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s ease;
+}
+.logo:hover {
+    background-color: darkgray;
+
+}
+
+
+.auth {
+    height: 80%;
+    width: 60%;
+    display: flex;
+    justify-content: center; /* Центрирует по горизонтали */
+    align-items: center; /* Центрирует по вертикали */
+
+    margin-right: 1%;
+    border-radius: 50px;
+    border: 2px solid #D3D3D3;
+    font-size: 20px;
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s ease;
+}
+.auth:hover {
+    height: 90%;
+    width: 70%;
+    background-color: darkgray;
+    font-size: 24px;
+    border-color: black;
+
+
+}
+
+.menubutton {
+    height: 100%;
+    width: 15%;
+    display: flex;
+    justify-content: center; /* Центрирует по горизонтали */
+    align-items: center; /* Центрирует по вертикали */
+    text-decoration: none;
+    color: inherit;
+    font-size: 20px;
+    transition: 0.3s ease;
+}
+.menubutton:hover {
+    background-color: darkgray;
+    font-size: 24px;
+}
+
+
+
