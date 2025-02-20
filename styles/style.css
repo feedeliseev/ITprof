@@ -35,7 +35,7 @@ body {
     transition: 0.3s ease;
 }
 .logo:hover {
-    background-color: darkgray;
+    background-color: Gainsboro;
 
 }
 
@@ -58,7 +58,7 @@ body {
 .auth:hover {
     height: 90%;
     width: 70%;
-    background-color: darkgray;
+    background-color: Gainsboro;
     font-size: 24px;
     border-color: black;
 
@@ -77,9 +77,51 @@ body {
     transition: 0.3s ease;
 }
 .menubutton:hover {
-    background-color: darkgray;
+    background-color: Gainsboro;
     font-size: 24px;
 }
 
+.proflist {
+    background-color: #FFFFFF;
+    height: 1000px;
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Центрирует по горизонтали */
+    align-items: center;
+    flex-direction: column;
+}
+
+.prof {
+    background-color: #F1F3F4;
+    height: 20%;
+    width: 80%;
+    border-radius: 50px;
+    border: 2px solid #D3D3D3;
+    text-decoration: none;
+    color: inherit;
+    margin: 2%;
+}
+
+.prof:hover {
+    background-color: Gainsboro;
+    border-color: black;
+    transition: 0.3s ease;
+
+
+}
+
+.profname {
+    margin-left: 4%;
+    margin-top: 3%;
+    margin-right: 4%;
+
+
+}
+.profdescr{
+    margin-left: 4%;
+    margin-top: 1%;
+    font-size: 18px;
+    margin-right: 4%;
+}
 
 
