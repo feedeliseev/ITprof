@@ -12,6 +12,7 @@
     font-family: "productsans";
 }
 
+
 body {
     background-color: #FFFFFF;
 }
@@ -115,16 +116,113 @@ body {
     margin-right: 4%;
 
 
+
 }
 .profdescr{
     margin-left: 4%;
     margin-top: 1%;
     font-size: 18px;
     margin-right: 4%;
+
 }
 .backimg {
     background-image: url("images/mainpageback.jpg");
     background-size: contain;
 
 }
+.text-color{
+    background-color: #FF0000;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 100%;
+    background-image: linear-gradient(
+            45deg,
+            #000000 33%,
+            #808080 33%,
+            #808080 40%,
+            #A9A9A9 40%,
+            #A9A9A9 47%,
+            #C0C0C0 47%,
+            #C0C0C0 54%,
+            #D3D3D3 54%,
+            #D3D3D3 61%,
+            #DCDCDC 61%,
+            #DCDCDC 68%,
+            #DCDCDC 68%);
+    animation: text-animate-rev 0.3s ease forwards;
 
+}
+.text-color:hover{
+    animation: text-animate 0.3s ease-in forwards;
+}
+@keyframes text-animate-rev {
+    0% {
+        background-size: 650%;
+    }
+    40% {
+        background-size: 650%;
+    }
+    100% {
+        background-size: 100%;
+    }
+}
+
+/* Move the background and make it larger. */
+/* Animation shown when hovering over the text. */
+@keyframes text-animate {
+    0% {
+        background-size: 100%;
+    }
+    80% {
+        background-size: 650%;
+    }
+    100% {
+        background-size: 650%;
+    }
+}
+
+.professions {
+    background-color: #F1F3F4;
+    height: 800px;
+    width: 80%;
+    border-radius: 50px;
+    border: 2px solid #D3D3D3;
+    text-decoration: none;
+    color: inherit;
+    margin: 2%;
+}
+
+.profsfeed {
+    background-color: #FFFFFF;
+    width: 100%;
+    height: 200px;
+
+
+
+}
+
+.profname2 {
+    margin-left: 3%;
+    margin-top: 2%;
+    margin-right: 30%;
+
+
+
+}
+.profdescr2 {
+    margin-left: 3%;
+    margin-top: 1%;
+    font-size: 18px;
+    margin-right: 30%;
+
+}
+
+.hr {
+    text-decoration: none;
+    color: inherit;
+
+}
+.hr:hover {
+    text-decoration: underline;
+    color: grey;
+}
