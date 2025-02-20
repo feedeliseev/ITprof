@@ -6,47 +6,8 @@
     <link rel="stylesheet" href="styles/style.css" />
 </head>
 <body>
-<header style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;">
-    <div class="menu">
-        <a class="logo" href="index.html">
-            <div>
-                <h1>Профессии в IT</h1>
-            </div>
-        </a>
 
-        <a class="menubutton" href="temporary.html">
-            <div>
-                <p>Список профессий</p>
-            </div>
-        </a>
-        <a class="menubutton" href="temporary.html">
-            <div>
-                <p>Раздел 2</p>
-            </div>
-        </a>
-        <a class="menubutton" href="temporary.html">
-            <div>
-                <p>Раздел 3</p>
-            </div>
-        </a>
-        <a class="menubutton" href="temporary.html">
-            <div>
-                <p>Раздел 4</p>
-            </div>
-        </a>
-
-        <div style="width: 20%; height: 100%; display: flex; justify-content: center; align-items: center;">
-            <a class="auth" href="temporary.html">
-                <div>
-                    <p>Авторизация</p>
-                </div>
-            </a>
-        </div>
-    </div>
-</header>
-
-
-
+<header><div id="header-container"></div></header>
 
 <main style="margin-top: 50px;">
     <div  style="display: flex; justify-content: center; align-items: center; height: 100px;" ><h1 >Выбери подходящую тебе профессию</h1></div>
@@ -72,5 +33,12 @@
 <footer>
     <div style="width: 100%; height: 200px; background-color: bisque"></div>
 </footer>
+
+<script>
+    fetch("siteheader.html")
+        .then(response => response.text())
+        .then(data => document.getElementById("header-container").innerHTML = data);
+</script>
+
 </body>
 </html>
