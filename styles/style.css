@@ -122,5 +122,9 @@ body {
     font-size: 18px;
     margin-right: 4%;
 }
+.backimg {
+    background-image: url("images/mainpageback.jpg");
+    background-size: contain;
 
+}
 
