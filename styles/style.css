@@ -59,7 +59,6 @@ body {
     height: 90%;
     width: 70%;
     background-color: Gainsboro;
-    font-size: 24px;
     border-color: black;
 
 
@@ -75,10 +74,10 @@ body {
     color: inherit;
     font-size: 20px;
     transition: 0.3s ease;
+
 }
 .menubutton:hover {
     background-color: Gainsboro;
-    font-size: 24px;
 }
 
 .proflist {
