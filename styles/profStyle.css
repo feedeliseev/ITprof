@@ -4,7 +4,7 @@
     background-color: #fff;
     padding: 20px;
     margin-top: 50px;
-    font-size: 1.5rem; 
+    font-size: 20px; 
 }
 
 .title-block {
@@ -17,4 +17,8 @@
 .title-block img {
     height: 100px;
     border-radius: 50%;
+}
+
+.info-block p{
+    margin-bottom: 20px; 
 }
