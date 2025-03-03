@@ -1,0 +1,24 @@
+.container {
+    width: 90%;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    margin-top: 50px;
+    font-size: 20px; 
+}
+
+.title-block {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    margin-bottom: 30px;
+}
+
+.title-block img {
+    height: 100px;
+    border-radius: 50%;
+}
+
+.info-block p{
+    margin-bottom: 20px; 
+}
