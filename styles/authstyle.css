@@ -1,0 +1,58 @@
+@font-face {
+    font-family: "productsans";
+    src: url("sans/productsans.ttf") format("truetype");
+    font-style: normal;
+    font-weight: normal;
+}
+*{
+    font-family: "productsans";
+
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #F1F3F4; /*молочно-бежевый с прозрачностью*/
+
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 50px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 30%;
+
+}
+
+input, select, button {
+    display: block;
+    width: 100%;
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 50px;
+    border: 2px solid #D3D3D3;
+
+}
+
+button{
+    background-color: #F1F3F4;
+    transition: 0.3s ease;
+
+}
+button:hover{
+    background-color: Gainsboro;
+
+}
+.logo {
+    max-height: 40px;
+}
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
