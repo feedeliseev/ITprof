@@ -10,7 +10,7 @@ ini_set('display_errors', 1);
 $host = "localhost";
 $db_name = "feedelisee";
 $username = "root";
-$password = "KQY6JCXUHUWeRAJ@";
+$password = "";
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8", $username, $password);
@@ -75,13 +75,13 @@ ob_end_flush(); // Завершаем буферизацию
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Авторизация</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/authstyle.css">
 </head>
 <body>
 <div class="container">
     <div class="header">
         <h2>Авторизация на Портал</h2>
-        <img class="logo" src="images/itmologo.png">
+        <a href="index.php"><img class="logo" src="styles/images/itmologo.png"></a>
     </div>
 
     <?php if (isset($_GET['message'])): ?>
@@ -94,6 +94,8 @@ ob_end_flush(); // Завершаем буферизацию
         <input type="password" name="password" placeholder="Пароль" required>
         <button type="submit">Войти</button>
     </form>
+
+
 </div>
 </body>
 </html>

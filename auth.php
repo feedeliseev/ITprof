@@ -3,7 +3,7 @@
 $host = "localhost";
 $dbname = "feedelisee";
 $username = "root";
-$password = "KQY6JCXUHUWeRAJ@";
+$password = "";
 
 try {
 $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
@@ -22,13 +22,13 @@ die("Ошибка подключения: " . $e->getMessage());
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/authstyle.css">
 </head>
 <body>
 <div class="container">
     <div class="header">
         <h2>Регистрация на Портал </h2>
-        <img class="logo" src="images/itmologo.png">
+        <a href="index.php"><img class="logo" src="styles/images/itmologo.png"></a>
     </div>
 
     <!-- Вывод сообщений (ошибок или успеха) -->

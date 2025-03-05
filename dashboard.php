@@ -50,7 +50,7 @@ exit();
   </div>
 </main>
 <script>
-  fetch("siteheader.html")
+  fetch("siteheader.php")
           .then(response => response.text())
           .then(data => document.getElementById("header-container").innerHTML = data);
 

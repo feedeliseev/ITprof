@@ -1,3 +1,6 @@
+<?php session_start(); ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +15,7 @@
     <div style="display: flex; justify-content: center; align-items: center; height: 300px;" class="backimg"><h1 id="typing"></h1></div>
 
     <div class="profsfeed">
-        <a href="temporary.html" class="hr">
+        <a href="cybersecurity.html" class="hr">
             <h2 class="profname2">Инженер по кибербезопасности</h2>
             <p class="profdescr2">Специалист, обеспечивающий защиту информационных систем и данных от несанкционированного доступа, кибератак
                 и других угроз. Основные задачи включают анализ рисков, настройку средств защиты,
@@ -23,7 +26,7 @@
     </div>
 
     <div class="profsfeed">
-        <a href="temporary.html" class="hr">
+        <a href="dataanalyst.html" class="hr">
             <h2 class="profname2">Аналитик данных</h2>
         <p class="profdescr2">Профессионал, который помогает компаниям принимать обоснованные решения на основе анализа данных.
             Он работает с различными источниками данных, очищает и структурирует их, а затем анализирует,
@@ -50,7 +53,7 @@
     </div>
 
     <div class="profsfeed">
-        <a href="temporary.html" class="hr">
+        <a href="gameDeveloper.html" class="hr">
             <h2 class="profname2">Разработчик игр</h2>
             <p class="profdescr2">Программист, который с помощью движков создаёт новые шутеры, квесты, стратегии, приключения и т.д.
                 Он работает над виртуальным миром в виде компьютерных игр: продумывает концепцию и дизайн, создаёт персонажей,
@@ -59,7 +62,7 @@
     </div>
 
     <div class="profsfeed">
-        <a href="temporary.html" class="hr">
+        <a href="devops.html" class="hr">
             <h2 class="profname2">DevOps</h2>
             <p class="profdescr2">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
         </a>
@@ -76,7 +79,7 @@
     </div>
 </footer>
 <script>
-  fetch("siteheader.html")
+  fetch("siteheader.php")
           .then(response => response.text())
           .then(data => document.getElementById("header-container").innerHTML = data);
 </script>

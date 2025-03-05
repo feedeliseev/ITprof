@@ -8,7 +8,7 @@ ini_set('display_errors', 1);
 $host = "localhost";
 $db_name = "feedelisee";
 $username = "root";
-$password = "KQY6JCXUHUWeRAJ@";
+$password = "";
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8", $username, $password);

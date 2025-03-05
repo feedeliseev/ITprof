@@ -1,3 +1,5 @@
+<?php session_start(); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +14,7 @@
 <main style="margin-top: 50px;">
     <div style="display: flex; justify-content: center; align-items: center; height: 300px;" class="backimg"><h1 id="typing"></h1></div>
     <div class="proflist">
-        <a href="temporary.html" class="prof">
+        <a href="cybersecurity.html" class="prof">
             <h2 class="profname">Инженер по кибербезопасности</h2>
             <p class="profdescr">Специалист, обеспечивающий защиту информационных систем и данных от несанкционированного доступа, кибератак
                 и других угроз. Основные задачи включают анализ рисков, настройку средств защиты,
@@ -21,7 +23,7 @@
                 методов взлома и противодействия им, а также навыков работы с современными решениями для защиты информации.</p>
         </a>
 
-        <a href="temporary.html" class="prof">
+        <a href="dataanalyst.html" class="prof">
             <h2 class="profname">Аналитик данных</h2>
             <p class="profdescr">Профессионал, который помогает компаниям принимать обоснованные решения на основе анализа данных.
                 Он работает с различными источниками данных, очищает и структурирует их, а затем анализирует,
@@ -41,12 +43,12 @@
 
 <footer>
     <div style="width: 100%; height: 200px; background-color: #F1F3F4; display: flex; justify-content: center; /* Центрирует по горизонтали */align-items: center;" >
-        <h3>Больше профессий во вкладке <a href="professions.html" class="hr">"список профессий"</a></h3>
+        <h3>Больше профессий во вкладке <a href="professions.php" class="hr">"список профессий"</a></h3>
     </div>
 </footer>
 
 <script>
-    fetch("siteheader.html")
+    fetch("siteheader.php")
         .then(response => response.text())
         .then(data => document.getElementById("header-container").innerHTML = data);
 </script>
