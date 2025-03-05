@@ -1,22 +1,40 @@
+<?php
+// Подключение к БД
+$host = "localhost";
+$dbname = "feedelisee";
+$username = "root";
+$password = "KQY6JCXUHUWeRAJ@";
+
+try {
+$pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+//Подключение к БД спомощью PHP Data Objects
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//setAttribute для легкого нахождения ошибок
+} catch (PDOException $e) {
+//exception для отображения ошибок
+die("Ошибка подключения: " . $e->getMessage());
+}
+?>
+
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
-    <link rel="stylesheet" href="styles/authstyle.css"> <!-- Подключаем CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="container">
     <div class="header">
         <h2>Регистрация на Портал </h2>
-        <img class="logo" src="styles/images/itmologo.png">
+        <img class="logo" src="images/itmologo.png">
     </div>
 
     <!-- Вывод сообщений (ошибок или успеха) -->
     <?php if (isset($_GET['message'])): ?>
     <p style="color: red;"><?php echo htmlspecialchars($_GET['message']); ?></p>
     <?php endif; ?>
-
 
 
     <form action="register.php" method="POST">
@@ -31,7 +49,10 @@
                 <option value="consultant">Консультант</option>
             </select>
             <button type="submit">Зарегистрироваться</button>
-            <button type="submit">Войти</button>
+    </form>
+
+    <form action="login.php" method="GET">
+        <button type="submit">Войти</button>
     </form>
 
 

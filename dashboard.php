@@ -1,10 +1,13 @@
 <?php
-header('Content-Type: text/html; charset=utf-8');
 session_start();
+if (!isset($_SESSION["user_id"])) {
+header("Location: index.php?message=" . urlencode("Войдите в систему"));
+exit();
+}
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <title>ОПД</title>
@@ -18,12 +21,11 @@ session_start();
   <div class="container">
     <!-- Профиль -->
     <section class="profile">
-      <?php if (isset($_SESSION['user'])): ?>
       <h2>Профиль</h2>
       <div class="profile-info">
         <img src="pictures/Sys_admin.png" alt="User Avatar" class="avatar">
         <div>
-          <p><strong><?= htmlspecialchars($_SESSION['user'])?></strong></p>
+          <p><strong><?= htmlspecialchars($_SESSION['name'])?></strong></p>
 
         </div>
       </div>
@@ -37,12 +39,14 @@ session_start();
       <a href="#" class="edit">Изменить</a>
     </section>
 
-    <!-- Пароль -->
-    <section class="password">
+
+    <!-- Роль -->
+    <section class="role">
       <h2>Пароль</h2>
-      <?= htmlspecialchars($_SESSION['password'])?>
+      <?= htmlspecialchars($_SESSION['role'])?>
       <a href="#" class="change">Изменить</a>
     </section>
+      <a href="logout.php">Выйти</a>
   </div>
 </main>
 <script>
