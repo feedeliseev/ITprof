@@ -31,6 +31,18 @@ if ($_SESSION['role'] !== 'admin') {
 }
 
 // Если пользователь админ, продолжаем выполнение админки
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
+    $id = intval($_POST['id']);
+    $sql = "DELETE FROM users WHERE id = ?";
+
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $stmt->close();
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -69,7 +81,12 @@ if ($_SESSION['role'] !== 'admin') {
                 <td>{$row['role']}</td>
                 <td>
                     <a href='edit_user.php?id={$row['id']}'>Редактировать</a>
-                    <a href='delete_user.php?id={$row['id']}'>Удалить</a>
+                    
+                    <form method='post'>
+                        <input type='hidden' name='id' value='$row[id]'>
+                        <button type='submit'>Удалить</button>
+                    </form>
+                      
                 </td>
             </tr>";
     }
