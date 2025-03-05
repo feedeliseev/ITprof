@@ -79,10 +79,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label>Email:</label>
             <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required><br>
 
+
+
             <label>Роль:</label>
             <select name="role">
                 <option value="user" <?php echo ($user['role'] == 'user') ? 'selected' : ''; ?>>Пользователь</option>
                 <option value="admin" <?php echo ($user['role'] == 'admin') ? 'selected' : ''; ?>>Администратор</option>
+                <option value="admin" <?php echo ($user['role'] == 'consultant') ? 'selected' : ''; ?>>Консультант</option>
+                <option value="admin" <?php echo ($user['role'] == 'expert') ? 'selected' : ''; ?>>Эксперт</option>
             </select><br>
 
             <button type="submit">Сохранить</button>

@@ -20,14 +20,14 @@
                 <p>Список профессий</p>
             </div>
         </a>
-        <a class="menubutton" href="temporary.php">
+        <a class="menubutton" href="ratings.php">
             <div>
-                <p>Раздел 2</p>
+                <p>Оценка профессий</p>
             </div>
         </a>
         <a class="menubutton" href="temporary.php">
             <div>
-                <p>Раздел 3</p>
+                <p>Тесты</p>
             </div>
         </a>
         <a class="menubutton" href="admin.php">

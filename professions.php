@@ -64,7 +64,8 @@
     <div class="profsfeed">
         <a href="devops.html" class="hr">
             <h2 class="profname2">DevOps</h2>
-            <p class="profdescr2">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p class="profdescr2">Профессия, объединяющая разработку и операционные процессы для улучшения взаимодействия между разработчиками и IT-отделами. Специалисты автоматизируют процессы разработки, тестирования и развертывания,
+                используя инструменты для мониторинга и управления инфраструктурой, что ускоряет выпуск обновлений и повышает стабильность систем.</p>
         </a>
     </div>
 
@@ -75,7 +76,7 @@
 
 <footer>
     <div style="width: 100%; height: 200px; background-color: #F1F3F4; display: flex; justify-content: center; /* Центрирует по горизонтали */align-items: center;" >
-        <h3>Один гандон решил избить Лупу. Лупа пожаловался старшему брату Пупе и тот пошел на драку вместо него. В итоге Пупа получил за Лупу.</h3>
+        <h3>ОПД НЕЙРОТЕХ 2025</h3>
     </div>
 </footer>
 <script>

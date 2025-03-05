@@ -23,28 +23,24 @@ exit();
     <section class="profile">
       <h2>Профиль</h2>
       <div class="profile-info">
-        <img src="pictures/Sys_admin.png" alt="User Avatar" class="avatar">
         <div>
           <p><strong><?= htmlspecialchars($_SESSION['name'])?></strong></p>
 
         </div>
       </div>
-      <a href="#" class="edit">Изменить</a>
     </section>
 
     <!-- Контакты (Email) -->
     <section class="contacts">
       <h2>Почта</h2>
       <p>Основной адрес электронной почты: <strong><?= htmlspecialchars($_SESSION['email'])?></strong></p>
-      <a href="#" class="edit">Изменить</a>
     </section>
 
 
     <!-- Роль -->
     <section class="role">
-      <h2>Пароль</h2>
+      <h2>Роль</h2>
       <?= htmlspecialchars($_SESSION['role'])?>
-      <a href="#" class="change">Изменить</a>
     </section>
       <a href="logout.php">Выйти</a>
   </div>
