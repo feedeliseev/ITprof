@@ -4,8 +4,9 @@
     background-color: #fff;
     padding: 20px;
     margin-top: 50px;
-    font-size: 20px; 
+    font-size: 20px;
 }
+
 
 .title-block {
     display: flex;
@@ -21,4 +22,14 @@
 
 .info-block p{
     margin-bottom: 20px; 
+}
+ul {
+    padding-left: 20px !important;
+    margin-left: 0 !important;
+    list-style-type: disc !important;
+}
+
+li {
+    margin-bottom: 8px !important;
+    line-height: 1.5 !important;
 }

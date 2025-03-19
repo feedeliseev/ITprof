@@ -28,8 +28,8 @@ if (!$profession) {
 <head>
     <meta charset="UTF-8">
     <title><?php echo htmlspecialchars($profession['name']); ?></title>
-    <link rel="stylesheet" href="styles/style.css" />
-    <link rel="stylesheet" href="styles/profStyle.css" />
+    <link rel="stylesheet" href="styles/style.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="styles/profStyle.css?v=<?php echo time(); ?>" />
 </head>
 <body>
 <header><div id="header-container"></div></header>
@@ -40,7 +40,7 @@ if (!$profession) {
     </div>
     <div class="info-block">
         <p><?php echo nl2br(htmlspecialchars($profession['short_description'])); ?></p>
-        <p><?php echo nl2br(htmlspecialchars($profession['full_description'])); ?></p>
+        <p><?php echo htmlspecialchars_decode($profession['full_description']); ?></p>
     </div>
 </div>
 
