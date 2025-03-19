@@ -4,6 +4,9 @@ if (!isset($_SESSION["user_id"])) {
 header("Location: index.php?message=" . urlencode("Войдите в систему"));
 exit();
 }
+
+$isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+?>
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +24,7 @@ exit();
   <div class="container">
     <!-- Профиль -->
     <section class="profile">
-      <h2>Профиль</h2>
+      <h2>Имя пользователя</h2>
       <div class="profile-info">
         <div>
           <p><strong><?= htmlspecialchars($_SESSION['name'])?></strong></p>
@@ -33,7 +36,7 @@ exit();
     <!-- Контакты (Email) -->
     <section class="contacts">
       <h2>Почта</h2>
-      <p>Основной адрес электронной почты: <strong><?= htmlspecialchars($_SESSION['email'])?></strong></p>
+      <p>Адрес электронной почты: <strong><?= htmlspecialchars($_SESSION['email'])?></strong></p>
     </section>
 
 
@@ -42,7 +45,18 @@ exit();
       <h2>Роль</h2>
       <?= htmlspecialchars($_SESSION['role'])?>
     </section>
+
+      <!-- Раздел для администратора -->
+      <?php if ($isAdmin) : ?>
+          <section class="admin-panel">
+              <h2>Администрирование</h2>
+              <a href="admin.php" class="admin-button">Перейти в панель администратора</a>
+          </section>
+      <?php endif; ?>
+
       <a href="logout.php">Выйти</a>
+  </div>
+
   </div>
 </main>
 <script>

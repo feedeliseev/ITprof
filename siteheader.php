@@ -22,17 +22,17 @@
         </a>
         <a class="menubutton" href="temporary.php">
             <div>
-                <p>ШКИП</p>
+                <p>Что-то</p>
             </div>
         </a>
         <a class="menubutton" href="temporary.php">
             <div>
-                <p>Тесты</p>
+                <p>Что-то</p>
             </div>
         </a>
-        <a class="menubutton" href="admin.php">
+        <a class="menubutton" href="temporary.php">
             <div>
-                <p>Админка</p>
+                <p>Что-то</p>
             </div>
         </a>
 

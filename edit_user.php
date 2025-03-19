@@ -88,8 +88,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <select name="role">
                 <option value="user" <?php echo ($user['role'] == 'user') ? 'selected' : ''; ?>>Пользователь</option>
                 <option value="admin" <?php echo ($user['role'] == 'admin') ? 'selected' : ''; ?>>Администратор</option>
-                <option value="admin" <?php echo ($user['role'] == 'consultant') ? 'selected' : ''; ?>>Консультант</option>
-                <option value="admin" <?php echo ($user['role'] == 'expert') ? 'selected' : ''; ?>>Эксперт</option>
+                <option value="consultant" <?php echo ($user['role'] == 'consultant') ? 'selected' : ''; ?>>Консультант</option>
+                <option value="expert" <?php echo ($user['role'] == 'expert') ? 'selected' : ''; ?>>Эксперт</option>
             </select><br>
 
             <button type="submit">Сохранить</button>

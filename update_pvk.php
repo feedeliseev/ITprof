@@ -28,6 +28,11 @@ if ($profId === 0) {
     die("Ошибка: неверный идентификатор профессии");
 }
 
+// Ограничение: нельзя выбрать более 10 ПВК
+if (count($selectedPvk) > 10) {
+    die("Ошибка: Вы не можете выбрать более 10 ПВК для одной профессии.");
+}
+
 // Удаляем старые записи эксперта для данной профессии
 $deleteQuery = $pdo->prepare("DELETE FROM pvk_prof WHERE profid = :profid AND userid = :userid");
 $deleteQuery->execute(['profid' => $profId, 'userid' => $userId]);

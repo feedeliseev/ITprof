@@ -20,6 +20,8 @@ session_start();
 
 // Проверяем, является ли пользователь экспертом
 $isExpert = isset($_SESSION['role']) && $_SESSION['role'] === 'expert';
+$isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+
 
 // Получаем профессии из базы
 $stmt = $conn->query("SELECT * FROM professions");
@@ -112,12 +114,14 @@ $professions = $stmt->fetch_all(MYSQLI_ASSOC);
                 <p class="profdescr2"><?= htmlspecialchars($prof['short_description']) ?></p>
             </a>
             <div class="rating-container <?= $isExpert ? 'expert' : '' ?>">
-                <?php if ($isExpert) : ?>
-                    <input type="range" class="rating-input" min="1" max="10" value="<?= $prof['rating'] ?>" data-id="<?= $prof['id'] ?>">
+                <?php if ($isAdmin) : ?>
+                    <div class="rating-container expert">
+                        <input type="range" class="rating-input" min="1" max="10" value="<?= $prof['rating'] ?>" data-id="<?= $prof['id'] ?>">
+                        <div class="rating-circle" id="rating-<?= $prof['id'] ?>">
+                            <?= $prof['rating'] ?>
+                        </div>
+                    </div>
                 <?php endif; ?>
-                <div class="rating-circle" id="rating-<?= $prof['id'] ?>">
-                    <?= $prof['rating'] ?>
-                </div>
             </div>
         </div>
     <?php endforeach; ?>

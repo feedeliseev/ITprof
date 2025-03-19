@@ -28,15 +28,28 @@ if (!$profession) {
 }
 
 // Получение списка ПВК и количества выборов
-$pvkQuery = $pdo->prepare(
+// SQL-запрос для отображения ПВК пользователям (фильтруем только с голосами)
+$pvkUserQuery = $pdo->prepare(
     "SELECT pvk.id, pvk.name, COUNT(pvk_prof.userid) AS total_count 
      FROM pvk 
      LEFT JOIN pvk_prof ON pvk.id = pvk_prof.pvkid AND pvk_prof.profid = :profid 
      GROUP BY pvk.id 
+     HAVING total_count > 0 
      ORDER BY total_count DESC"
 );
-$pvkQuery->execute(['profid' => $id]);
-$pvkList = $pvkQuery->fetchAll();
+$pvkUserQuery->execute(['profid' => $id]);
+$pvkUserList = $pvkUserQuery->fetchAll();
+
+// SQL-запрос для экспертов (полный список ПВК)
+$pvkExpertQuery = $pdo->prepare(
+    "SELECT pvk.id, pvk.name, 
+        (SELECT COUNT(*) FROM pvk_prof WHERE pvkid = pvk.id AND profid = :profid) AS total_count
+     FROM pvk
+     ORDER BY total_count DESC"
+);
+$pvkExpertQuery->execute(['profid' => $id]);
+$pvkExpertList = $pvkExpertQuery->fetchAll();
+
 
 // Количество экспертов, выбравших хотя бы одно ПВК для профессии
 $totalExpertsQuery = $pdo->prepare("SELECT COUNT(DISTINCT userid) FROM pvk_prof WHERE profid = :profid");
@@ -71,31 +84,63 @@ if ($isExpert) {
         <p><?php echo htmlspecialchars_decode($profession['full_description']); ?></p>
     </div>
 
-    <h2>Перечень ПВК</h2>
-    <ul>
-        <?php foreach ($pvkList as $pvk) : ?>
-            <li>
-                <?php echo htmlspecialchars($pvk['name']); ?> -
-                <?php echo $pvk['total_count']; ?> выборов
-                <?php if ($totalExperts > 0) : ?>
-                    (среднее: <?php echo round($pvk['total_count'] / $totalExperts, 2); ?>)
-                <?php endif; ?>
-            </li>
-        <?php endforeach; ?>
-    </ul>
+    <?php if (!$isExpert && !empty($pvkUserList)) : ?>
+        <h2>Перечень ПВК</h2>
+        <ul>
+            <?php foreach ($pvkUserList as $pvk) : ?>
+                <li>
+                    <?php echo htmlspecialchars($pvk['name']); ?> -
+                    <?php echo $pvk['total_count']; ?> выборов
+                    <?php if ($totalExperts > 0) : ?>
+                        (среднее: <?php echo round($pvk['total_count'] / $totalExperts, 2); ?>)
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php elseif (!$isExpert) : ?>
+        <p>Пока ни один эксперт не выбрал ПВК для этой профессии.</p>
+    <?php endif; ?>
 
     <?php if ($isExpert) : ?>
         <form method="post" action="/ITprof/update_pvk.php">
-            <h3>Выберите ПВК для профессии</h3>
-            <?php foreach ($pvkList as $pvk) : ?>
-                <label>
-                    <input type="checkbox" name="pvk[]" value="<?php echo $pvk['id']; ?>" <?php echo in_array($pvk['id'], $expertPvk) ? 'checked' : ''; ?>>
-                    <?php echo htmlspecialchars($pvk['name']); ?>
-                </label><br>
-            <?php endforeach; ?>
+            <h3>Выберите ПВК для профессии (не более 10)</h3>
+            <div id="pvk-container">
+                <?php foreach ($pvkExpertList as $pvk) : ?>
+                    <label>
+                        <input type="checkbox" name="pvk[]" value="<?php echo $pvk['id']; ?>"
+                               class="pvk-checkbox"
+                            <?php echo in_array($pvk['id'], $expertPvk) ? 'checked' : ''; ?>>
+                        <?php echo htmlspecialchars($pvk['name']); ?>
+                        (<?php echo $pvk['total_count']; ?> голосов)
+                    </label><br>
+                <?php endforeach; ?>
+            </div>
             <input type="hidden" name="profid" value="<?php echo $id; ?>">
-            <button type="submit">Подтвердить</button>
+            <button type="submit" id="submit-btn">Подтвердить</button>
+
+
         </form>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const checkboxes = document.querySelectorAll(".pvk-checkbox");
+                const submitButton = document.getElementById("submit-btn");
+
+                function updateCheckboxState() {
+                    const checkedCount = [...checkboxes].filter(cb => cb.checked).length;
+                    checkboxes.forEach(cb => {
+                        if (!cb.checked) {
+                            cb.disabled = checkedCount >= 10;
+                        }
+                    });
+                }
+
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener("change", updateCheckboxState);
+                });
+
+                updateCheckboxState(); // Запускаем проверку при загрузке
+            });
+        </script>
     <?php endif; ?>
 </div>
 
