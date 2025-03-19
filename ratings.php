@@ -107,7 +107,7 @@ $professions = $stmt->fetch_all(MYSQLI_ASSOC);
 
     <?php foreach ($professions as $prof) : ?>
         <div class="profsfeed">
-            <a  class="hr">
+            <a href="profession_page.php?id=<?= $prof['id'] ?>" class="hr">
                 <h2 class="profname2"><?= htmlspecialchars($prof['name']) ?></h2>
                 <p class="profdescr2"><?= htmlspecialchars($prof['short_description']) ?></p>
             </a>

@@ -1,7 +1,28 @@
-<?php session_start(); ?>
+<?php session_start();
+
+$host = 'localhost';  // Сервер базы данных
+$db = 'feedelisee';  // Имя базы данных
+$user = 'root';  // Имя пользователя базы
+$pass = '';  // Пароль пользователя
+
+// Подключение к базе
+$conn = new mysqli($host, $user, $pass, $db);
+
+// Проверка подключения
+if ($conn->connect_error) {
+    die("Ошибка подключения: " . $conn->connect_error);
+}
+
+// Устанавливаем кодировку UTF-8
+$conn->set_charset("utf8");
+
+// Получаем три профессии с самым высоким рейтингом
+$stmt = $conn->query("SELECT id, name, short_description FROM professions ORDER BY rating DESC LIMIT 3");
+$topProfessions = $stmt->fetch_all(MYSQLI_ASSOC);
+?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>ОПД</title>
@@ -12,38 +33,22 @@
 <header><div id="header-container"></div></header>
 
 <main style="margin-top: 50px;">
-    <div style="display: flex; justify-content: center; align-items: center; height: 300px;" class="backimg"><h1 id="typing"></h1></div>
+    <div style="display: flex; justify-content: center; align-items: center; height: 300px;" class="backimg">
+        <h1 id="typing"></h1>
+    </div>
     <div class="proflist">
-        <a href="cybersecurity.html" class="prof">
-            <h2 class="profname">Инженер по кибербезопасности</h2>
-            <p class="profdescr">Специалист, обеспечивающий защиту информационных систем и данных от несанкционированного доступа, кибератак
-                и других угроз. Основные задачи включают анализ рисков, настройку средств защиты,
-                мониторинг активности сети, выявление и ликвидацию уязвимостей, а также разработку стратегий безопасности.
-                Профессия требует глубоких знаний в области сетевых технологий, операционных систем,
-                методов взлома и противодействия им, а также навыков работы с современными решениями для защиты информации.</p>
-        </a>
-
-        <a href="dataanalyst.html" class="prof">
-            <h2 class="profname">Аналитик данных</h2>
-            <p class="profdescr">Профессионал, который помогает компаниям принимать обоснованные решения на основе анализа данных.
-                Он работает с различными источниками данных, очищает и структурирует их, а затем анализирует,
-                чтобы выявить тенденции, закономерности и проблемы.</p>
-        </a>
-
-        <a href="sysAdmin.html" class="prof">
-            <h2 class="profname">Системный администратор</h2>
-            <p class="profdescr">Работник, должностные обязанности которого подразумевают
-                обеспечение штатной работы парка компьютерной техники, сети и программного обеспечения.
-                Зачастую системному администратору вменяется обеспечение информационной безопасности в
-                организации.</p>
-        </a>
-
+        <?php foreach ($topProfessions as $prof) : ?>
+            <a href="profession_page.php?id=<?= $prof['id'] ?>" class="prof">
+                <h2 class="profname"><?= htmlspecialchars($prof['name']) ?></h2>
+                <p class="profdescr"><?= htmlspecialchars($prof['short_description']) ?></p>
+            </a>
+        <?php endforeach; ?>
     </div>
 </main>
 
 <footer>
-    <div style="width: 100%; height: 200px; background-color: #F1F3F4; display: flex; justify-content: center; /* Центрирует по горизонтали */align-items: center;" >
-        <h3>Больше профессий во вкладке <a href="professions.php" class="hr">"список профессий"</a></h3>
+    <div style="width: 100%; height: 200px; background-color: #F1F3F4; display: flex; justify-content: center; align-items: center;">
+        <h3>Больше профессий во вкладке <a href="ratings.php" class="hr">"список профессий"</a></h3>
     </div>
 </footer>
 
