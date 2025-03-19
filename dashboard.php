@@ -7,7 +7,7 @@ exit();
 
 $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
 ?>
-?>
+
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -19,7 +19,7 @@ $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
 </head>
 <body>
 <header><div id="header-container"></div></header>
-<main style="margin-top: 50px">
+<main style="margin-top: 50px;">
   <div style="display: flex; justify-content: center; align-items: center; height: 300px;" class="backimg"><h1 id="typing"></h1></div>
   <div class="container">
     <!-- Профиль -->
