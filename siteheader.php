@@ -15,14 +15,14 @@
             </div>
         </a>
 
-        <a class="menubutton" href="professions.php">
+        <a class="menubutton" href="ratings.php">
             <div>
                 <p>Список профессий</p>
             </div>
         </a>
-        <a class="menubutton" href="ratings.php">
+        <a class="menubutton" href="temporary.php">
             <div>
-                <p>Оценка профессий</p>
+                <p>ШКИП</p>
             </div>
         </a>
         <a class="menubutton" href="temporary.php">

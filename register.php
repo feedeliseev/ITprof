@@ -18,7 +18,7 @@ try {
         $name = trim($_POST["name"]);
         $email = trim($_POST["email"]);
         $password = trim($_POST["password"]);
-        $role = $_POST["role"];
+        $role = "user";
 
         // Валидация данных
         if (strlen($name) < 3 || strlen($password) < 6) {

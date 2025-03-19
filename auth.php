@@ -42,12 +42,7 @@ die("Ошибка подключения: " . $e->getMessage());
         <input type="text" name="name" placeholder="Имя" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Пароль" required>
-            <select name="role">
-                <option value="user">Пользователь</option>
-                <option value="admin">Администратор</option>
-                <option value="expert">Эксперт</option>
-                <option value="consultant">Консультант</option>
-            </select>
+
             <button type="submit">Зарегистрироваться</button>
     </form>
 

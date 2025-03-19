@@ -144,7 +144,7 @@ $professions = $stmt->fetch_all(MYSQLI_ASSOC);
         .then(data => document.getElementById("header-container").innerHTML = data);
 </script>
 <script>
-    const text = "Оценка профессий";
+    const text = "Список профессий";
     let index = 0;
 
     function typeEffect() {
