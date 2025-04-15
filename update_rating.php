@@ -17,7 +17,7 @@ $conn->set_charset("utf8");
 session_start();
 
 // Проверяем, является ли пользователь экспертом
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'expert') {
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     http_response_code(403);
     exit("Нет прав на изменение рейтинга!");
 }

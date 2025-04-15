@@ -34,6 +34,7 @@ $topProfessions = $stmt->fetch_all(MYSQLI_ASSOC);
 
 <main style="margin-top: 50px;">
     <div style="display: flex; justify-content: center; align-items: center; height: 300px;" class="backimg">
+
         <h1 id="typing"></h1>
     </div>
     <div class="proflist">

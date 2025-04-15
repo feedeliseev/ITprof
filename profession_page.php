@@ -18,6 +18,7 @@ try {
 $id = isset($_GET['id']) ? intval($_GET['id']) : 1;
 $userId = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : null;
 $isExpert = isset($_SESSION['role']) && $_SESSION['role'] === 'expert';
+$isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
 
 $query = $pdo->prepare("SELECT name, short_description, full_description FROM professions WHERE id = :id");
 $query->execute(['id' => $id]);
@@ -74,6 +75,7 @@ if ($isExpert) {
 </head>
 <body>
 <header><div id="header-container"></div></header>
+<main style="margin-top: 50px;">
 <div class="container">
     <div class="title-block">
         <h1><?php echo htmlspecialchars($profession['name']); ?></h1>
@@ -92,11 +94,11 @@ if ($isExpert) {
                     <?php echo htmlspecialchars($pvk['name']); ?> -
                     <?php echo $pvk['total_count']; ?> выборов
                     <?php if ($totalExperts > 0) : ?>
-                        (среднее: <?php echo round($pvk['total_count'] / $totalExperts, 2); ?>)
+                        (средний рейтинг: <?php echo round($pvk['total_count'] / $totalExperts, 2); ?>)
                     <?php endif; ?>
                 </li>
             <?php endforeach; ?>
-        </ul>
+        </ul>ы
     <?php elseif (!$isExpert) : ?>
         <p>Пока ни один эксперт не выбрал ПВК для этой профессии.</p>
     <?php endif; ?>
@@ -143,7 +145,31 @@ if ($isExpert) {
         </script>
     <?php endif; ?>
 </div>
+</main>
 
+<footer>
+    <div style="width: 100%; height: 200px; background-color: #F1F3F4; display: flex; justify-content: center; align-items: center;">
+        <?php if ($isAdmin) : ?>
+            <a href="edit_profession.php?id=<?= $id ?>" class="edit-button">Редактировать профессию</a>
+        <?php endif; ?>
+    </div>
+    <style>
+        .edit-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 18px;
+            text-decoration: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .edit-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</footer>
 <script>
     fetch("siteheader.php")
         .then(response => response.text())

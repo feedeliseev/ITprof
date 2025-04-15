@@ -113,7 +113,7 @@ $professions = $stmt->fetch_all(MYSQLI_ASSOC);
                 <h2 class="profname2"><?= htmlspecialchars($prof['name']) ?></h2>
                 <p class="profdescr2"><?= htmlspecialchars($prof['short_description']) ?></p>
             </a>
-            <div class="rating-container <?= $isExpert ? 'expert' : '' ?>">
+            <div class="rating-container <?= $isAdmin ? 'admin' : '' ?>">
                 <?php if ($isAdmin) : ?>
                     <div class="rating-container expert">
                         <input type="range" class="rating-input" min="1" max="10" value="<?= $prof['rating'] ?>" data-id="<?= $prof['id'] ?>">
@@ -127,6 +127,35 @@ $professions = $stmt->fetch_all(MYSQLI_ASSOC);
     <?php endforeach; ?>
 </main>
 
+<footer>
+    <div style="width: 100%; height: 200px; background-color: #F1F3F4; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        
+
+        <?php if ($isAdmin) : ?>
+            <a href="add_profession.php" class="admin-button">Добавить профессию</a>
+        <?php endif; ?>
+    </div>
+</footer>
+<style>
+    .admin-button {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 12px 20px;
+        font-size: 18px;
+        text-decoration: none;
+        background-color: #F1F3F4; /*молочно-бежевый с прозрачностью*/
+        color: black;
+        border-radius: 5px;
+        transition: 0.3s ease;
+        border: 2px solid #D3D3D3;
+
+    }
+
+    .admin-button:hover {
+        background-color: Gainsboro;
+        border-color: black;
+    }
+</style>
 <script>
     document.querySelectorAll('.rating-input').forEach(input => {
         input.addEventListener('input', function () {
@@ -161,5 +190,7 @@ $professions = $stmt->fetch_all(MYSQLI_ASSOC);
 
     typeEffect();
 </script>
+
+
 </body>
 </html>
