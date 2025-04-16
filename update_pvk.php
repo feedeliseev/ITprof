@@ -15,32 +15,41 @@ try {
     die("Ошибка подключения: " . $e->getMessage());
 }
 
-// Проверяем, авторизован ли эксперт
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'expert') {
-    die("Доступ запрещен");
+    die("Нет доступа");
 }
 
 $userId = $_SESSION['user_id'];
 $profId = isset($_POST['profid']) ? intval($_POST['profid']) : 0;
 $selectedPvk = isset($_POST['pvk']) ? $_POST['pvk'] : [];
+$ratings = isset($_POST['rating']) ? $_POST['rating'] : [];
 
 if ($profId === 0) {
     die("Ошибка: неверный идентификатор профессии");
 }
 
-// Ограничение: нельзя выбрать более 10 ПВК
-if (count($selectedPvk) > 10) {
-    die("Ошибка: Вы не можете выбрать более 10 ПВК для одной профессии.");
+if (count($selectedPvk) < 5 || count($selectedPvk) > 10) {
+    die("Ошибка: выберите от 5 до 10 ПВК.");
 }
 
-// Удаляем старые записи эксперта для данной профессии
-$deleteQuery = $pdo->prepare("DELETE FROM pvk_prof WHERE profid = :profid AND userid = :userid");
-$deleteQuery->execute(['profid' => $profId, 'userid' => $userId]);
+// Удалить предыдущие оценки этого эксперта
+$deleteStmt = $pdo->prepare("DELETE FROM pvk_prof WHERE profid = :profid AND userid = :userid");
+$deleteStmt->execute(['profid' => $profId, 'userid' => $userId]);
 
-// Вставляем новые записи
-$insertQuery = $pdo->prepare("INSERT INTO pvk_prof (pvkid, profid, userid) VALUES (:pvkid, :profid, :userid)");
-foreach ($selectedPvk as $pvkId) {
-    $insertQuery->execute(['pvkid' => intval($pvkId), 'profid' => $profId, 'userid' => $userId]);
+// Вставить новые
+$insertStmt = $pdo->prepare("INSERT INTO pvk_prof (pvkid, profid, userid, rating) VALUES (:pvkid, :profid, :userid, :rating)");
+
+foreach ($selectedPvk as $pvkId => $on) {
+    $rating = isset($ratings[$pvkId]) ? intval($ratings[$pvkId]) : 0;
+    if ($rating < 1 || $rating > 10) {
+        continue; // пропускаем недопустимые значения
+    }
+    $insertStmt->execute([
+        'pvkid' => $pvkId,
+        'profid' => $profId,
+        'userid' => $userId,
+        'rating' => $rating
+    ]);
 }
 
 header("Location: profession_page.php?id=$profId");

@@ -28,41 +28,28 @@ if (!$profession) {
     die("Профессия не найдена");
 }
 
-// Получение списка ПВК и количества выборов
-// SQL-запрос для отображения ПВК пользователям (фильтруем только с голосами)
+// Получение среднего рейтинга ПВК
 $pvkUserQuery = $pdo->prepare(
-    "SELECT pvk.id, pvk.name, COUNT(pvk_prof.userid) AS total_count 
-     FROM pvk 
-     LEFT JOIN pvk_prof ON pvk.id = pvk_prof.pvkid AND pvk_prof.profid = :profid 
-     GROUP BY pvk.id 
-     HAVING total_count > 0 
-     ORDER BY total_count DESC"
+    "SELECT pvk.id, pvk.name, ROUND(AVG(pvk_prof.rating), 2) AS avg_rating
+     FROM pvk
+     LEFT JOIN pvk_prof ON pvk.id = pvk_prof.pvkid AND pvk_prof.profid = :profid
+     GROUP BY pvk.id
+     HAVING COUNT(pvk_prof.userid) > 0
+     ORDER BY avg_rating DESC"
 );
 $pvkUserQuery->execute(['profid' => $id]);
 $pvkUserList = $pvkUserQuery->fetchAll();
 
-// SQL-запрос для экспертов (полный список ПВК)
-$pvkExpertQuery = $pdo->prepare(
-    "SELECT pvk.id, pvk.name, 
-        (SELECT COUNT(*) FROM pvk_prof WHERE pvkid = pvk.id AND profid = :profid) AS total_count
-     FROM pvk
-     ORDER BY total_count DESC"
-);
-$pvkExpertQuery->execute(['profid' => $id]);
+$pvkExpertQuery = $pdo->query("SELECT id, name FROM pvk ORDER BY name");
 $pvkExpertList = $pvkExpertQuery->fetchAll();
 
-
-// Количество экспертов, выбравших хотя бы одно ПВК для профессии
-$totalExpertsQuery = $pdo->prepare("SELECT COUNT(DISTINCT userid) FROM pvk_prof WHERE profid = :profid");
-$totalExpertsQuery->execute(['profid' => $id]);
-$totalExperts = $totalExpertsQuery->fetchColumn();
-
-// Получение выбранных ПВК эксперта
 $expertPvk = [];
 if ($isExpert) {
-    $expertPvkQuery = $pdo->prepare("SELECT pvkid FROM pvk_prof WHERE profid = :profid AND userid = :userid");
+    $expertPvkQuery = $pdo->prepare("SELECT pvkid, rating FROM pvk_prof WHERE profid = :profid AND userid = :userid");
     $expertPvkQuery->execute(['profid' => $id, 'userid' => $userId]);
-    $expertPvk = array_column($expertPvkQuery->fetchAll(), 'pvkid');
+    foreach ($expertPvkQuery->fetchAll() as $row) {
+        $expertPvk[$row['pvkid']] = $row['rating'];
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -72,79 +59,104 @@ if ($isExpert) {
     <title><?php echo htmlspecialchars($profession['name']); ?></title>
     <link rel="stylesheet" href="styles/style.css?v=<?php echo time(); ?>" />
     <link rel="stylesheet" href="styles/profStyle.css?v=<?php echo time(); ?>" />
+    <style>
+        .rating-input {
+            width: 50px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 <header><div id="header-container"></div></header>
 <main style="margin-top: 50px;">
-<div class="container">
-    <div class="title-block">
-        <h1><?php echo htmlspecialchars($profession['name']); ?></h1>
-        <img src="pictures/Web_developer.png" alt="<?php echo htmlspecialchars($profession['name']); ?>">
-    </div>
-    <div class="info-block">
-        <p><?php echo nl2br(htmlspecialchars($profession['short_description'])); ?></p>
-        <p><?php echo htmlspecialchars_decode($profession['full_description']); ?></p>
-    </div>
+    <div class="container">
+        <div class="title-block">
+            <h1><?php echo htmlspecialchars($profession['name']); ?></h1>
+            <img src="pictures/Web_developer.png" alt="<?php echo htmlspecialchars($profession['name']); ?>">
+        </div>
+        <div class="info-block">
+            <p><?php echo nl2br(htmlspecialchars($profession['short_description'])); ?></p>
+            <p><?php echo htmlspecialchars_decode($profession['full_description']); ?></p>
+        </div>
 
-    <?php if (!$isExpert && !empty($pvkUserList)) : ?>
-        <h2>Перечень ПВК</h2>
-        <ul>
-            <?php foreach ($pvkUserList as $pvk) : ?>
-                <li>
-                    <?php echo htmlspecialchars($pvk['name']); ?> -
-                    <?php echo $pvk['total_count']; ?> выборов
-                    <?php if ($totalExperts > 0) : ?>
-                        (средний рейтинг: <?php echo round($pvk['total_count'] / $totalExperts, 2); ?>)
-                    <?php endif; ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>ы
-    <?php elseif (!$isExpert) : ?>
-        <p>Пока ни один эксперт не выбрал ПВК для этой профессии.</p>
-    <?php endif; ?>
-
-    <?php if ($isExpert) : ?>
-        <form method="post" action="/ITprof/update_pvk.php">
-            <h3>Выберите ПВК для профессии (не более 10)</h3>
-            <div id="pvk-container">
-                <?php foreach ($pvkExpertList as $pvk) : ?>
-                    <label>
-                        <input type="checkbox" name="pvk[]" value="<?php echo $pvk['id']; ?>"
-                               class="pvk-checkbox"
-                            <?php echo in_array($pvk['id'], $expertPvk) ? 'checked' : ''; ?>>
-                        <?php echo htmlspecialchars($pvk['name']); ?>
-                        (<?php echo $pvk['total_count']; ?> голосов)
-                    </label><br>
+        <?php if (!$isExpert && !empty($pvkUserList)) : ?>
+            <h2>Средние оценки ПВК</h2>
+            <ul>
+                <?php foreach ($pvkUserList as $pvk) : ?>
+                    <li>
+                        <?php echo htmlspecialchars($pvk['name']); ?> —
+                        средняя важность: <?php echo $pvk['avg_rating']; ?>
+                    </li>
                 <?php endforeach; ?>
-            </div>
-            <input type="hidden" name="profid" value="<?php echo $id; ?>">
-            <button type="submit" id="submit-btn">Подтвердить</button>
+            </ul>
+        <?php elseif (!$isExpert) : ?>
+            <p>Пока ни один эксперт не оценил ПВК для этой профессии.</p>
+        <?php endif; ?>
 
+        <?php if ($isExpert) : ?>
+            <form method="post" action="/ITprof/update_pvk.php" onsubmit="return validateRatings();">
+                <h3>Выберите до 10 ПВК и выставьте им важность (1–10)</h3>
+                <div id="pvk-container">
+                    <?php foreach ($pvkExpertList as $pvk) : ?>
+                        <?php
+                        $checked = isset($expertPvk[$pvk['id']]);
+                        $rating = $checked ? $expertPvk[$pvk['id']] : '';
+                        ?>
+                        <div style="margin-bottom: 10px;">
+                            <label>
+                                <input type="checkbox" class="pvk-checkbox" name="pvk[<?php echo $pvk['id']; ?>]" <?php echo $checked ? 'checked' : ''; ?>>
+                                <?php echo htmlspecialchars($pvk['name']); ?>
+                            </label>
+                            &nbsp;
+                            <input type="number" name="rating[<?php echo $pvk['id']; ?>]" min="1" max="10" class="rating-input" value="<?php echo $rating; ?>" <?php echo $checked ? '' : 'disabled'; ?>>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <input type="hidden" name="profid" value="<?php echo $id; ?>">
+                <button type="submit" id="submit-btn">Сохранить</button>
+            </form>
 
-        </form>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const checkboxes = document.querySelectorAll(".pvk-checkbox");
-                const submitButton = document.getElementById("submit-btn");
+            <script>
+                function validateRatings() {
+                    const checked = document.querySelectorAll('.pvk-checkbox:checked');
+                    if (checked.length < 5 || checked.length > 10) {
+                        alert('Выберите от 5 до 10 ПВК');
+                        return false;
+                    }
 
-                function updateCheckboxState() {
-                    const checkedCount = [...checkboxes].filter(cb => cb.checked).length;
-                    checkboxes.forEach(cb => {
-                        if (!cb.checked) {
-                            cb.disabled = checkedCount >= 10;
+                    const ratings = [];
+                    checked.forEach(cb => {
+                        const ratingInput = cb.closest('div').querySelector('.rating-input');
+                        if (ratingInput) {
+                            ratings.push(ratingInput.value);
                         }
                     });
+
+                    const uniqueRatings = new Set(ratings);
+                    if (uniqueRatings.size !== ratings.length) {
+                        alert('Каждой ПВК должна быть присвоена уникальная оценка (без повторений).');
+                        return false;
+                    }
+
+                    return true;
+
                 }
 
-                checkboxes.forEach(checkbox => {
-                    checkbox.addEventListener("change", updateCheckboxState);
+                document.querySelectorAll('.pvk-checkbox').forEach(cb => {
+                    cb.addEventListener('change', function () {
+                        const ratingInput = this.closest('div').querySelector('.rating-input');
+                        if (this.checked) {
+                            ratingInput.disabled = false;
+                            if (!ratingInput.value) ratingInput.value = 5;
+                        } else {
+                            ratingInput.disabled = true;
+                            ratingInput.value = '';
+                        }
+                    });
                 });
-
-                updateCheckboxState(); // Запускаем проверку при загрузке
-            });
-        </script>
-    <?php endif; ?>
-</div>
+            </script>
+        <?php endif; ?>
+    </div>
 </main>
 
 <footer>
