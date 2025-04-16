@@ -6,7 +6,50 @@ exit();
 }
 
 $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "feedelisee";
+
+try {
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $conn->exec("SET NAMES utf8mb4");
+} catch(PDOException $e) {
+    die("Ошибка подключения к базе данных: " . $e->getMessage());
+}
+
+$user_id = $_SESSION['user_id'];
+$name = isset($_SESSION['name']) ? htmlspecialchars($_SESSION['name']) : 'Не указано';
+$email = isset($_SESSION['email']) ? htmlspecialchars($_SESSION['email']) : 'Не указано';
+$role = isset($_SESSION['role']) ? htmlspecialchars($_SESSION['role']) : 'Не указано';
+
+$query = "
+    SELECT
+        u.id,
+        u.name,
+        u.email,
+        u.role,
+        tr.average_time,
+        tr.correct_answers,
+        tr.test_date
+    FROM users u
+    LEFT JOIN test_results tr ON u.id = tr.user_id
+    WHERE u.id = :user_id
+    ORDER BY tr.test_date DESC
+";
+try {
+    $stmt = $conn->prepare($query);
+    $stmt->execute(['user_id' => $user_id]);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch(PDOException $e) {
+    echo "Ошибка при выполнении запроса. Пожалуйста, попробуйте позже.";
+    $results = [];
+}
+
+$conn = null;
 ?>
+
 
 
 <!DOCTYPE html>
@@ -54,6 +97,31 @@ $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
           </section>
       <?php endif; ?>
 
+
+
+      <!-- Результаты тестов -->
+      <section class="test-results">
+          <h2>Результаты тестов</h2>
+          <?php if (count($results) > 0): ?>
+              <table>
+                  <tr>
+                      <th>Average Time</th>
+                      <th>Correct Answers</th>
+                      <th>Test Date</th>
+                  </tr>
+                  <?php foreach ($results as $row): ?>
+                      <tr>
+
+                          <td><?= isset($row['average_time']) ? number_format($row['average_time'], 2) : '-' ?></td>
+                          <td><?= isset($row['correct_answers']) ? htmlspecialchars($row['correct_answers']) : '-' ?></td>
+                          <td><?= isset($row['test_date']) ? htmlspecialchars($row['test_date']) : '-' ?></td>
+                      </tr>
+                  <?php endforeach; ?>
+              </table>
+          <?php else: ?>
+              <p>Результаты тестов отсутствуют.</p>
+          <?php endif; ?>
+      </section>
       <a href="logout.php">Выйти</a>
   </div>
 

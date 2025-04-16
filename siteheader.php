@@ -30,9 +30,9 @@
                 <p>Что-то</p>
             </div>
         </a>
-        <a class="menubutton" href="temporary.php">
+        <a class="menubutton" href="lab3-4 js/test_lab2/tests_lab3.html">
             <div>
-                <p>Что-то</p>
+                <p>Тесты</p>
             </div>
         </a>
 
