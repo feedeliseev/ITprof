@@ -51,15 +51,15 @@ function onAnswer(num) {
 let num1;
 let num2;
 let audiosMap = new Map();
-audiosMap.set(1, new Audio("public/audio/1.mp3"))
-audiosMap.set(2, new Audio("public/audio/2.mp3"))
-audiosMap.set(3, new Audio("public/audio/3.mp3"))
-audiosMap.set(4, new Audio("public/audio/4.mp3"))
-audiosMap.set(5, new Audio("public/audio/5.mp3"))
-audiosMap.set(6, new Audio("public/audio/6.mp3"))
-audiosMap.set(7, new Audio("public/audio/7.mp3"))
-audiosMap.set(8, new Audio("public/audio/8.mp3"))
-audiosMap.set(9, new Audio("public/audio/9.mp3"))
+audiosMap.set(1, new Audio("audio/1.mp3"))
+audiosMap.set(2, new Audio("audio/2.mp3"))
+audiosMap.set(3, new Audio("audio/3.mp3"))
+audiosMap.set(4, new Audio("audio/4.mp3"))
+audiosMap.set(5, new Audio("audio/5.mp3"))
+audiosMap.set(6, new Audio("audio/6.mp3"))
+audiosMap.set(7, new Audio("audio/7.mp3"))
+audiosMap.set(8, new Audio("audio/8.mp3"))
+audiosMap.set(9, new Audio("audio/9.mp3"))
 let sum;
 let chosenAudio1;
 let chosenAudio2;

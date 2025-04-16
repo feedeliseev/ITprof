@@ -8,7 +8,7 @@ let isDuringTest = false;
 let correctTests = 0;
 const resultList = [];
 
-const audio = new Audio("public/audio/audiosignal.mp3");
+const audio = new Audio("audio/audiosignal.mp3");
 
 //Keydown on space
 document.addEventListener('keydown', listener);
