@@ -32,7 +32,8 @@ $query = "
         u.role,
         tr.average_time,
         tr.correct_answers,
-        tr.test_date
+        tr.test_date,
+        tr.test_name
     FROM users u
     LEFT JOIN test_results tr ON u.id = tr.user_id
     WHERE u.id = :user_id
@@ -105,13 +106,14 @@ $conn = null;
           <?php if (count($results) > 0): ?>
               <table>
                   <tr>
+                      <th>Test</th>
                       <th>Average Time</th>
                       <th>Correct Answers</th>
                       <th>Test Date</th>
                   </tr>
                   <?php foreach ($results as $row): ?>
                       <tr>
-
+                          <td><?= isset($row['test_name']) ? htmlspecialchars($row['test_name']) : '-' ?></td>
                           <td><?= isset($row['average_time']) ? number_format($row['average_time'], 2) : '-' ?></td>
                           <td><?= isset($row['correct_answers']) ? htmlspecialchars($row['correct_answers']) : '-' ?></td>
                           <td><?= isset($row['test_date']) ? htmlspecialchars($row['test_date']) : '-' ?></td>
@@ -148,5 +150,45 @@ $conn = null;
 
   typeEffect();
 </script>
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 30px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 16px;
+        background-color: #ffffffdd;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+        padding: 12px 18px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f51cf1;
+        color: white;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f7f9fc;
+    }
+
+    tr:hover {
+        background-color: #eef2f7;
+        transition: background-color 0.2s;
+    }
+
+    td {
+        color: #333;
+    }
+</style>
 </body>
 </html>

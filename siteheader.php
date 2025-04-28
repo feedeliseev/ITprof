@@ -30,7 +30,7 @@
                 <p>Что-то</p>
             </div>
         </a>
-        <a class="menubutton" href="lab3-4 js/test_lab2/tests_lab3.html">
+        <a class="menubutton" href="tests_lab3.html">
             <div>
                 <p>Тесты</p>
             </div>
