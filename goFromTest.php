@@ -1,9 +1,9 @@
 <?php
 // Настройки подключения к базе данных
 $host = 'localhost';
-$db   = 'your_database';
-$user = 'your_user';
-$pass = 'your_password';
+$db   = 'feedelisee';
+$user = 'root';
+$pass = '';
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";

@@ -435,20 +435,46 @@ a, u {
 }
 
 .moving-test__moving-dot-wrapper_speed_low {
+    left: 20%;
     -webkit-animation-duration: 8s;
 }
 
 .moving-test__moving-dot-wrapper_speed_high {
+    left: 80%;
     -webkit-animation-duration: 2s;
 }
 
-.moving-test__fixed-dot {
+.moving-test__fixed-dot{
     width: 50px;
     height: 50px;
     position:absolute;
     background-color: black;
     top: 50%;
     left: 50%;
+    margin-left: -25px;
+    margin-top: -100px;
+    border-radius: 50%;
+}
+
+.moving-test__fixed-dot1{
+    width: 50px;
+    height: 50px;
+    position:absolute;
+    background-color: black;
+    top: 50%;
+    left: 20%;
+    margin-left: -25px;
+    margin-top: -100px;
+    border-radius: 50%;
+}
+
+.moving-test__fixed-dot2{
+    width: 50px;
+    height: 50px;
+    position:absolute;
+    background-color: black;
+    top: 50%;
+    left: 80%;
     margin-left: -25px;
     margin-top: -100px;
     border-radius: 50%;

@@ -30,14 +30,15 @@ $query = "
         u.name,
         u.email,
         u.role,
-        tr.average_time,
-        tr.correct_answers,
         tr.test_date,
-        tr.test_name
+        tr.score_percent,
+        t.test_name,
+        tr.mid
     FROM users u
-    LEFT JOIN test_results tr ON u.id = tr.user_id
+    LEFT JOIN Test_result tr ON u.id = tr.user_id
+    LEFT JOIN Tests t ON tr.test_id = t.id
     WHERE u.id = :user_id
-    ORDER BY tr.test_date DESC
+    ORDER BY t.test_name ASC, tr.test_date DESC
 ";
 try {
     $stmt = $conn->prepare($query);
@@ -46,6 +47,27 @@ try {
 } catch(PDOException $e) {
     echo "Ошибка при выполнении запроса. Пожалуйста, попробуйте позже.";
     $results = [];
+}
+
+$query2 = "
+    SELECT
+        tr2.test_id,
+        t.test_name,
+        tr2.test_date,
+        tr2.sd
+    FROM Test_result2 tr2
+    LEFT JOIN Tests t ON tr2.test_id = t.id
+    WHERE tr2.user_id = :user_id
+    ORDER BY t.test_name ASC, tr2.test_date DESC
+";
+
+try {
+    $stmt2 = $conn->prepare($query2);
+    $stmt2->execute(['user_id' => $user_id]);
+    $results2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+} catch(PDOException $e) {
+    echo "Ошибка при получении Test_result2: " . $e->getMessage();
+    $results2 = [];
 }
 
 $conn = null;
@@ -62,7 +84,10 @@ $conn = null;
 
 </head>
 <body>
-<header><div id="header-container"></div></header>
+<header>
+    <div id="header-container"></div>
+
+</header>
 <main style="margin-top: 50px;">
   <div style="display: flex; justify-content: center; align-items: center; height: 300px;" class="backimg"><h1 id="typing"></h1></div>
   <div class="container">
@@ -102,26 +127,48 @@ $conn = null;
 
       <!-- Результаты тестов -->
       <section class="test-results">
-          <h2>Результаты тестов</h2>
+          <h2>Результаты тестов 1 </h2>
           <?php if (count($results) > 0): ?>
               <table>
                   <tr>
-                      <th>Test</th>
-                      <th>Average Time</th>
-                      <th>Correct Answers</th>
-                      <th>Test Date</th>
+                      <th>Тест</th>
+                      <th>Результат</th>
+                      <th>Дата</th>
+                      <th>Среднее</th>
                   </tr>
                   <?php foreach ($results as $row): ?>
                       <tr>
                           <td><?= isset($row['test_name']) ? htmlspecialchars($row['test_name']) : '-' ?></td>
-                          <td><?= isset($row['average_time']) ? number_format($row['average_time'], 2) : '-' ?></td>
-                          <td><?= isset($row['correct_answers']) ? htmlspecialchars($row['correct_answers']) : '-' ?></td>
+                          <td><?= isset($row['score_percent']) ? number_format($row['score_percent'], 2) . '%' : '-' ?></td>
                           <td><?= isset($row['test_date']) ? htmlspecialchars($row['test_date']) : '-' ?></td>
+                          <td><?= isset($row['mid']) ? htmlspecialchars($row['mid']) : '-' ?></td>
                       </tr>
                   <?php endforeach; ?>
               </table>
           <?php else: ?>
               <p>Результаты тестов отсутствуют.</p>
+          <?php endif; ?>
+      </section>
+
+      <section class="test-results">
+          <h2>Результаты тестов 2</h2>
+          <?php if (count($results2) > 0): ?>
+              <table>
+                  <tr>
+                      <th>Тест</th>
+                      <th>Дата</th>
+                      <th>Отклонение (SD)</th>
+                  </tr>
+                  <?php foreach ($results2 as $row): ?>
+                      <tr>
+                          <td><?= htmlspecialchars($row['test_name']) ?></td>
+                          <td><?= htmlspecialchars($row['test_date']) ?></td>
+                          <td><?= htmlspecialchars($row['sd']) ?></td>
+                      </tr>
+                  <?php endforeach; ?>
+              </table>
+          <?php else: ?>
+              <p>Результаты по новым тестам отсутствуют.</p>
           <?php endif; ?>
       </section>
       <a href="logout.php">Выйти</a>

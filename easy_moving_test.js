@@ -21,10 +21,10 @@ function showSettings() {
 
 function updateDotSpeed(speedFactor) {
     const movingDotWrapper = document.getElementById('movingDotWrapper');
-    
+
     const computedStyle = window.getComputedStyle(movingDotWrapper);
     const matrix = computedStyle.transform;
-    
+
     if (matrix && matrix !== 'none') {
         const values = matrix.match(/matrix\((.+)\)/)[1].split(',');
         const a = parseFloat(values[0]);
@@ -32,13 +32,13 @@ function updateDotSpeed(speedFactor) {
         currentAngle = Math.atan2(b, a) * (180 / Math.PI);
         if (currentAngle < 0) currentAngle += 360;
     }
-    
+
     const baseDuration = 5;
     const newDuration = baseDuration / speedFactor;
-    
+
     movingDotWrapper.style.animation = 'none';
     movingDotWrapper.offsetHeight;
-    
+
     movingDotWrapper.style.transform = `rotate(${currentAngle}deg)`;
     movingDotWrapper.style.animation = `rotate ${newDuration}s linear infinite`;
     movingDotWrapper.style.animationDelay = `-${(currentAngle / 360) * newDuration}s`;
@@ -48,25 +48,25 @@ function changeSpeed() {
     let newSpeed;
     const changeType = document.querySelector('input[name="changeType"]:checked').value;
     let direction;
-    
+
     if (changeType === 'random') {
         direction = Math.random() > 0.5 ? 1 : -1;
     } else {
         direction = currentSpeed <= 1.0 ? 1 : -1;
     }
-    
+
     newSpeed = currentSpeed + (direction * accelerationStep);
     newSpeed = Math.max(0.5, Math.min(3.0, newSpeed));
-    
+
     currentSpeed = newSpeed;
     updateDotSpeed(currentSpeed);
-    
+
     scheduleNextSpeedChange();
 }
 
 function scheduleNextSpeedChange() {
     const changeType = document.querySelector('input[name="changeType"]:checked').value;
-    
+
     if (changeType === 'random') {
         const minInterval = 5;
         const maxInterval = 15;
@@ -114,6 +114,7 @@ function start_test() {
     interval = setInterval(() => {
         elapsedTime = (Date.now() - startTime) / 1000;
         if (elapsedTime >= testDuration) {
+
             finish_test();
         }
     }, 100);
@@ -122,8 +123,8 @@ function start_test() {
 
     const showTimer = document.getElementById('showTimer').checked;
     const showProgress = document.getElementById('showProgress').checked;
-    
-    document.getElementById('Iteration').style.display = 
+
+    document.getElementById('Iteration').style.display =
         (showTimer || showProgress) ? 'block' : 'none';
 
     document.getElementById('Instruction').style.display = 'none';
@@ -143,9 +144,9 @@ function updateTimer() {
     const remainingTime = testDuration - elapsedTime;
     const minutes = Math.floor(remainingTime / 60);
     const seconds = Math.floor(remainingTime % 60);
-    
+
     if (document.getElementById('showTimer').checked) {
-        document.getElementById('Iteration').innerHTML = 
+        document.getElementById('Iteration').innerHTML =
             `Осталось: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
 }
@@ -155,20 +156,20 @@ const SPACE_COOLDOWN = 500;
 
 function next_time(e) {
     const currentTime = Date.now();
-    
+
     if (e.code === 'Space' && currentTime - lastSpaceTime > SPACE_COOLDOWN && !e.repeat) {
         lastSpaceTime = currentTime;
-        
+
         let movingDot = document.getElementById('movingDotWrapper');
         let animationDuration = window.getComputedStyle(movingDot).animationDuration;
         let rotationalSpeed = 2 * Math.PI / parseFloat(animationDuration);
-        
+
         let matrixValues = window.getComputedStyle(movingDot).transform
                          .match(/matrix\((.+)\)/)[1].split(',');
         let angle = Math.atan2(parseFloat(matrixValues[1]), parseFloat(matrixValues[0]));
-        
+
         let reactionError = angle / rotationalSpeed;
-        
+
         if (Math.abs(reactionError) < 0.35) {
             resultList.push(reactionError);
             updateResultsDisplay(reactionError, false);
@@ -185,11 +186,11 @@ function updateResultsDisplay(error, isError) {
         const successCount = resultList.length;
         const errorCount = errorList.length;
         let text = `Результаты:<br>Удачные: ${successCount}<br>Ошибки: ${errorCount}`;
-        
+
         if (!isError && !document.getElementById('showTimer').checked) {
             text += `<br>Текущий: ${error.toFixed(3)} сек`;
         }
-        
+
         if (isError) text += "<br>Ошибка!";
         resultElement.innerHTML = text;
     } else {
@@ -203,7 +204,7 @@ function finish_test() {
     clearInterval(timerInterval);
     clearTimeout(speedChangeInterval);
     document.removeEventListener('keydown', next_time);
-    
+
     // Рассчет общего стандартного отклонения
     let sd, sdMinus, sdPlus;
     let dispersionMinusCounter = 0;
@@ -230,34 +231,34 @@ function finish_test() {
     if (document.getElementById('showMinuteResults').checked) {
         const totalMinutes = Math.ceil(testDuration / 60);
         const minuteInterval = 60; // 60 секунд в минуте
-        
+
         for (let minute = 0; minute < totalMinutes; minute++) {
             const startSecond = minute * minuteInterval;
             const endSecond = (minute + 1) * minuteInterval;
-            
+
             // Фильтруем результаты для текущей минуты
             const minuteReactions = resultList.filter((_, index) => {
                 const reactionTime = (errorList[index] ? errorList[index] : resultList[index]);
                 return reactionTime >= startSecond && reactionTime < endSecond;
             });
-            
+
             // Рассчитываем статистику для минуты
             let minuteSd = "0";
             let minuteSdMinus = "0";
             let minuteSdPlus = "0";
-            
+
             if (minuteReactions.length > 0) {
                 // Общее отклонение
                 const minuteDispersion = minuteReactions.reduce((acc, number) => acc + Math.pow(number, 2), 0) / minuteReactions.length;
                 minuteSd = Math.sqrt(minuteDispersion).toFixed(3);
-                
+
                 // Отрицательное отклонение
                 const minusReactions = minuteReactions.filter(x => x < 0);
                 if (minusReactions.length > 0) {
                     const minusDispersion = minusReactions.reduce((acc, number) => acc + Math.pow(number, 2), 0) / minusReactions.length;
                     minuteSdMinus = Math.sqrt(minusDispersion).toFixed(3);
                 }
-                
+
                 // Положительное отклонение
                 const plusReactions = minuteReactions.filter(x => x > 0);
                 if (plusReactions.length > 0) {
@@ -265,7 +266,7 @@ function finish_test() {
                     minuteSdPlus = Math.sqrt(plusDispersion).toFixed(3);
                 }
             }
-            
+
             minuteResults.push({
                 minute: minute + 1,
                 count: minuteReactions.length,
@@ -313,7 +314,7 @@ function finish_test() {
                     <th>СКО минус</th>
                     <th>СКО плюс</th>
                 </tr>`;
-        
+
         minuteResults.forEach(result => {
             resultHTML += `
                 <tr>
@@ -324,7 +325,7 @@ function finish_test() {
                     <td>${result.sdPlus}</td>
                 </tr>`;
         });
-        
+
         resultHTML += `</table>`;
     }
 
@@ -333,4 +334,22 @@ function finish_test() {
     document.getElementById('Result').innerHTML = resultHTML;
     document.getElementById('Retry').style.display = 'block';
     document.getElementById('Resultcab').style.display = 'block';
+
+    if (isNaN(sd)) {
+        sd = 0;
+    }
+    submitMovingResult(parseFloat(sd), TEST_ID);
+}
+function submitMovingResult(sd, testId) {
+    fetch('submit_result2.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+            test_id: testId,
+            sd: sd
+        })
+    })
+        .then(response => response.text())
+        .then(alert)
+        .catch(err => console.error('Ошибка отправки результата:', err));
 }
