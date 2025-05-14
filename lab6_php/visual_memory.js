@@ -3,6 +3,7 @@ let isDuringTest = false;
 let canClick = false;
 let score = 0;
 let memorizationTime = 3000; // default 3 seconds
+let highlightedCells = []; // Добавляем глобальную переменную для запомненных ячеек
 
 // Difficulty settings
 const difficultySettings = {
@@ -207,13 +208,14 @@ function start_test() {
     document.getElementById('bg').style.background = 'white';
     document.getElementById('Scene').style.display = 'block';
     elements.settings.style.display = 'none';
+    selectedCells = []; // Сбрасываем выбранные ячейки
+    highlightedCells = []; // Сбрасываем запомненные ячейки
     
     // Select difficulty
     let difficulty;
     if (progressiveMode) {
         difficulty = selectRandomDifficulty();
     } else {
-        // В случайном режиме выбираем сложность равномерно
         const difficulties = ['easy', 'medium', 'hard'];
         difficulty = difficulties[Math.floor(Math.random() * difficulties.length)];
     }
@@ -226,16 +228,16 @@ function start_test() {
         activeCells.push(document.getElementById(i.toString()));
     }
     
-    shuffle(activeCells);
+    // Запоминаем перемешанные ячейки в глобальной переменной
+    highlightedCells = shuffle([...activeCells]).slice(0, settings.highlightedCells);
     
     // Highlight random cells
-    for (let i = 0; i < settings.highlightedCells; i++) {
-        activeCells[i].style.backgroundColor = settings.color;
-    }
+    highlightedCells.forEach(cell => {
+        cell.style.backgroundColor = settings.color;
+    });
     
     setTimeout(fillAnswers, memorizationTime);
 }
-
 function cell(id) {
     if (canClick) {
         let cell = document.getElementById(id);
@@ -270,24 +272,11 @@ function finish_test() {
     elements.settingsButton.style.display = 'none';
     elements.settings.style.display = 'none';
 
-    
     const settings = difficultySettings[currentDifficulty];
     let correct = 0;
     let incorrect = 0;
     
-    // Determine which cells were correct (first N highlighted cells)
-    const correctCells = [];
-    for (let i = 1; i <= settings.totalCells; i++) {
-        const cell = document.getElementById(i.toString());
-        if (cell.style.display !== 'none') {
-            correctCells.push(cell);
-        }
-    }
-    
-    shuffle(correctCells);
-    const highlightedCells = correctCells.slice(0, settings.highlightedCells);
-    
-    // Check selected cells
+    // Check selected cells against the highlightedCells we stored
     for (const cell of selectedCells) {
         if (highlightedCells.includes(cell)) {
             correct++;
@@ -300,7 +289,7 @@ function finish_test() {
     
     // Highlight missed correct cells
     for (const cell of highlightedCells) {
-        if (cell.style.backgroundColor === 'white') {
+        if (!selectedCells.includes(cell)) {
             cell.style.backgroundColor = 'blue';
         }
     }
