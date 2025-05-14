@@ -270,6 +270,7 @@ function start_test() {
 }
 
 function finish_test() {
+    console.log("Функция finish_test запущена");
     isDuringTest = false;
 
     // Добавляем последнюю минуту данных
@@ -330,6 +331,15 @@ function finish_test() {
     document.getElementById('Lower_marker').style.display = 'none';
     document.getElementById('Timer').style.display = 'none';
     document.getElementById('Retry').style.display = 'block';
+    // Отправка результата в базу данных
+    fetch('submit_result3.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `test_id=${TEST_ID}&mid=${reactionStats.average.toFixed(0)}&count=${allReactionTimes.length}`
+    })
+        .then(response => response.text())
+        .then(data => console.log("Ответ от сервера:", data))
+        .catch(error => console.error("Ошибка при отправке:", error));
 }
 
 function calculateReactionStats(times) {

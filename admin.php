@@ -51,7 +51,114 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
     <meta charset="UTF-8">
     <title>Админ-панель</title>
     <link rel="stylesheet" href="styles/style.css" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f4f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
 
+        main {
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            font-size: 16px;
+            background-color: #ffffffdd;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 18px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f51cf1;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f7f9fc;
+        }
+
+        tr:hover {
+            background-color: #eef2f7;
+            transition: background-color 0.2s;
+        }
+
+        td {
+            color: #333;
+        }
+
+        form {
+            display: inline;
+        }
+
+        .admin-button,
+        button {
+            background-color: #e53935;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            margin: 2px 0;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .admin-button {
+            background-color: #1976d2;
+        }
+
+        .admin-button:hover {
+            background-color: #125aa2;
+        }
+
+        button:hover {
+            background-color: #c62828;
+        }
+
+        .top-links {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .top-links a {
+            text-decoration: none;
+            margin: 0 10px;
+            color: #1976d2;
+            font-weight: 500;
+        }
+
+        .top-links a:hover {
+            text-decoration: underline;
+        }
+
+
+    </style>
 </head>
 <body>
 <header><div id="header-container"></div></header>
@@ -93,8 +200,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
     ?>
 </table>
 
-    <a href="logout.php">Выйти</a>
-    <a href="index.php">На главную</a>
+    <div class="top-links">
+        <a href="index.php">На главную</a>
+        <a href="logout.php">Выйти</a>
+    </div>
 </main>
 <script>
     fetch("siteheader.php")

@@ -1,160 +1,172 @@
-
-
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <title>Выбор теста</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style_lab.css">
     <link rel="stylesheet" href="../../styles/style.css" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f8fa;
+            margin: 0;
+            padding: 0;
+        }
 
-    <title>Document</title>
+        header {
+            margin-bottom: 20px;
+        }
+
+        main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 40px 0 20px;
+            text-align: center;
+            color: #333;
+
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+
+        }
+
+        @media (max-width: 700px) {
+            .test-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .test-card {
+            background-color: #F1F3F4;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 24px;
+            text-align: center;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            color: #222;
+            border-radius: 50px;
+            border: 2px solid #D3D3D3;
+        }
+
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .test-card h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .test-card p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
-<header><div id="header-container"></div></header>
-<main style="margin-top: 50px;">
+<header>
+    <div id="header-container"></div>
+</header>
+<div style="display: flex; justify-content: center; align-items: center; height: 300px;" class="backimg">
 
-    <div class="bg_img">
-        <div class="choice">
-            <p class="title_text">Простые и сложные сенсомоторные реакции</p>
-            <div class="boxes">
-                <a href="easy_audtest.php">
-                    <div class="box_1">
-                        <div class="icon">
-                            <img class="icon_1" src="">
-                        </div>
-                        <p class="text_box">
-                            <u class="box_title">
-                                <b>Слуховой тест</b>
-                                <b>легкий</b>
-                            </u>
-                        </p>
-                    </div>
-                </a>
-                <a href="easy_eye_test.php">
-                    <div class="box_1">
-                        <div class="icon">
-                            <img class="icon_2" src="">
-                        </div>
-                        <p class="text_box">
-                            <u class="box_title">
-                                <b>Зрительный тест</b>
-                                <b>легкий</b>
-                            </u>
-                        </p>
-                    </div>
-                </a>
-                <a href="med_eye_test.php">
-                    <div class="box_1">
-                        <div class="icon">
-                            <img class="icon_1" src="">
-                        </div>
-                        <p class="text_box">
-                            <u class="box_title">
-                                <b>Зрительный тест</b>
-                                <b>средний</b>
-                            </u>
-                        </p>
-                    </div>
-                </a>
-                <a href="sum_aud_test.php">
-                    <div class="box_1">
-                        <div class="icon">
-                            <img class="icon_3" src="">
-                        </div>
-                        <p class="text_box">
-                            <u class="box_title">
-                                <b>Слуховой тест</b>
-                                <b>сложный</b>
-                            </u>
-                        </p>
+    <h1 id="typing"></h1>
+</div>
+<main>
 
-                    </div>
-                </a>
-                <a href="sum_eye_test.php">
-                    <div class="box_1">
-                        <div class="icon">
-                            <img class="icon_3" src="">
-                        </div>
-                        <p class="text_box">
-                            <u class="box_title">
-                                <b>Зрительный тест</b>
-                                <b>сложный</b>
-                            </u>
-                        </p>
-                    </div>
-                </a>
-            </div>
-        <p class="title_text">Простая и сложная реакция на движущийся
-            объект</p>
-        <div class="boxes">
-            <a href="easy_moving_test.php">
-                <div class="box_1">
-                    <p class="text_box">
-                        <u class="box_title">
-                            <b>Реакция на движущийся объект </b>
-                            <b>простой уровень</b>
-
-                        </u>
-                    </p>
-                </div>
-            </a>
-            <a href="hard_moving_test.php">
-                <div class="box_1">
-                    <div class="icon">
-                        <img class="icon_1" src="">
-                    </div>
-                    <p class="text_box">
-                        <u class="box_title">
-                            <b>Реакция на движущийся объект</b>
-                            <b>Сложный уровень</b>
-
-                        </u>
-                    </p>
-                </div>
-            </a>
-        </div>
-
-
-    <p class="title_text">Простая и сложная реакция на движущийся
-        объект</p>
-    <div class="boxes">
-        <a href="easy_moving_test.php">
-            <div class="box_1">
-                <p class="text_box">
-                    <u class="box_title">
-                        <b>Реакция на движущийся объект </b>
-                        <b>простой уровень</b>
-
-                    </u>
-                </p>
-            </div>
+    <h2 class="section-title">Простые и сложные сенсомоторные реакции</h2>
+    <div class="test-grid">
+        <a href="easy_audtest.php" class="test-card">
+            <h3>Слуховой тест</h3><p>Лёгкий</p>
         </a>
-        <a href="hard_moving_test.php">
-            <div class="box_1">
-                <div class="icon">
-                    <img class="icon_1" src="">
-                </div>
-                <p class="text_box">
-                    <u class="box_title">
-                        <b>Реакция на движущийся объект</b>
-                        <b>Сложный уровень</b>
-
-                    </u>
-                </p>
-            </div>
+        <a href="easy_eye_test.php" class="test-card">
+            <h3>Зрительный тест</h3><p>Лёгкий</p>
+        </a>
+        <a href="med_eye_test.php" class="test-card">
+            <h3>Зрительный тест</h3><p>Средний</p>
+        </a>
+        <a href="sum_aud_test.php" class="test-card">
+            <h3>Слуховой тест</h3><p>Сложный</p>
+        </a>
+        <a href="sum_eye_test.php" class="test-card">
+            <h3>Зрительный тест</h3><p>Сложный</p>
         </a>
     </div>
-    </div>
-    </div>
+
+    <h2 class="section-title">Реакция на движущийся объект</h2>
+    <div class="test-grid">
+        <a href="easy_moving_test.php" class="test-card">
+            <h3>Реакция на движущийся объект</h3><p>Простой уровень</p>
+        </a>
+        <a href="hard_moving_test.php" class="test-card">
+            <h3>Реакция на движущийся объект</h3><p>Сложный уровень</p>
+        </a>
     </div>
 
-
+    <h2 class="section-title">Лабораторная 5</h2>
+    <div class="test-grid">
+        <a href="analog_tracking.php" class="test-card">
+            <h3>Analog Tracking</h3><p>Простой уровень</p>
+        </a>
+        <a href="tracking_with_persecution.php" class="test-card">
+            <h3>Tracking with Persecution</h3><p>Сложный уровень</p>
+        </a>
+    </div>
+    <h2 class="section-title">Лабораторная 6</h2>
+    <div class="test-grid">
+        <a href="visual_memory.php" class="test-card">
+            <h3>Visual memory</h3><p>Простой уровень</p>
+        </a>
+        <a href="verbal_memory.php" class="test-card">
+            <h3>Verbal memory</h3><p>Сложный уровень</p>
+        </a>
+        <a href="red_black_table.php" class="test-card">
+            <h3>Red black table</h3><p>Сложный уровень</p>
+        </a>
+        <a href="landolt_ring.php" class="test-card">
+            <h3>landolt ring</h3><p>Сложный уровень</p>
+        </a>
+        <a href="raven%20test/ravent_test.php" class="test-card">
+            <h3>raven test</h3><p>Сложный уровень</p>
+        </a>
+        <a href="vionarovsky/voinarovsky_test.php" class="test-card">
+            <h3>vionarovsky</h3><p>Сложный уровень</p>
+        </a>
+        <a href="compass/compasses_test.php" class="test-card">
+            <h3>compass</h3><p>Сложный уровень</p>
+        </a>
+    </div>
 </main>
+
 <script>
     fetch("siteheader.php")
         .then(response => response.text())
         .then(data => document.getElementById("header-container").innerHTML = data);
+</script>
+<script>
+    const text = "Тесты";
+    let index = 0;
+
+    function typeEffect() {
+        if (index < text.length) {
+            document.getElementById("typing").innerHTML += text[index];
+            index++;
+            setTimeout(typeEffect, 100); // Скорость печати (мс)
+        }
+    }
+
+    typeEffect();
 </script>
 </body>
 </html>

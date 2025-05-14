@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete'])) {
     $deleteStmt->bind_param("i", $profId);
 
     if ($deleteStmt->execute()) {
-        header("Location: professions.php"); // Перенаправление на список профессий
+        header("Location: ratings.php"); // Перенаправление на список профессий
         exit();
     } else {
         $error = "Ошибка при удалении профессии!";

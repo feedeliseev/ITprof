@@ -69,6 +69,83 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <title>Редактирование пользователя</title>
     <link rel="stylesheet" href="styles/style.css" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f4f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 8px;
+            margin-top: 20px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        form input[type="text"],
+        form input[type="email"],
+        form select {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            background-color: #fdfdfd;
+        }
+
+        form button,
+        form a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        form button {
+            background-color: #f51cf1;
+            color: white;
+            margin-right: 10px;
+        }
+
+        form button:hover {
+            background-color: #d015d0;
+        }
+
+        form a {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        form a:hover {
+            background-color: #ccc;
+        }
+        </style>
 </head>
 <body>
     <header><div id="header-container"></div></header>

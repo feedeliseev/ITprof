@@ -426,4 +426,13 @@ function finish_test() {
     document.getElementById('Lower_marker').style.display = 'none';
     document.getElementById('Timer').style.display = 'none';
     document.getElementById('Retry').style.display = 'block';
+    // Отправка результата на сервер
+    fetch('submit_result4.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `test_id=${TEST_ID}&mid=${reactionStats.average.toFixed(2)}&percentage=${trackingPercentage}`
+    })
+        .then(response => response.text())
+        .then(data => console.log("Ответ от сервера:", data))
+        .catch(error => console.error("Ошибка при отправке:", error));
 }
