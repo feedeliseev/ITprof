@@ -16,8 +16,8 @@
         <button id='Settings_button' class="settings_button" name="settings" onclick="showSettings()">Настройки</button>
         <div id="Settings" class="settings_panel">
             <div class="setting_item">
-                <label for="testDuration">Длительность теста (сек):</label>
-                <input type="number" id="testDuration" min="10" max="2400" value="60">
+                <label for="testDuration">Время запоминания(сек):</label>
+                <input type="number" id="testDuration" min="5" max="60" value="30">
             </div>
 
             <div class="setting_item">
