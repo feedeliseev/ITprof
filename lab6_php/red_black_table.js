@@ -161,6 +161,22 @@ function start_test() {
     }
 }
 
+function checkAllCellsHidden() {
+    const scene = document.getElementById('Scene');
+    const cells = scene.getElementsByClassName('cell-red');
+    const blackCells = scene.getElementsByClassName('cell-black');
+    
+    // Проверяем, есть ли хотя бы одна видимая ячейка
+    for (let cell of cells) {
+        if (cell.style.visibility !== 'hidden') return false;
+    }
+    for (let cell of blackCells) {
+        if (cell.style.visibility !== 'hidden') return false;
+    }
+    
+    return true;
+}
+
 function cell(val) {
     if (!isDuringTest) return;
     
@@ -177,6 +193,11 @@ function cell(val) {
             score++;
             event.target.style.visibility = 'hidden';
             cursor++;
+            
+            // Проверяем, остались ли еще ячейки
+            if (checkAllCellsHidden()) {
+                finish_test();
+            }
         }
     } else if (isBlackCell && !isRedExpected) {
         // Проверяем черную ячейку (должна быть следующей в убывающей последовательности)
@@ -186,6 +207,11 @@ function cell(val) {
             score++;
             event.target.style.visibility = 'hidden';
             cursor++;
+            
+            // Проверяем, остались ли еще ячейки
+            if (checkAllCellsHidden()) {
+                finish_test();
+            }
         }
     }
 }

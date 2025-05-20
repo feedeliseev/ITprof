@@ -2,8 +2,14 @@
 let timerInterval;
 let testEndTime;
 let correctAnswers = 0;
+let k = 0;
 let totalAnswered = 0;
 let answers = []; // Массив для хранения ответов пользователя
+let answerTimes = []; // Массив для хранения времени ответа на каждый вопрос
+let questionStartTime; // Время начала ответа на текущий вопрос
+let fastAnswersCount = 0; // Счетчик быстрых ответов
+const FAST_ANSWER_THRESHOLD = 4000; // Порог быстрого ответа в мс (3 секунды)
+const WARNING_THRESHOLD = 3; // После этого количества быстрых ответов показываем предупреждение
 
 const TOTAL_QUESTIONS = 30; // Общее количество вопросов в тесте
 
@@ -44,7 +50,9 @@ function start_test() {
     correctAnswers = 0;
     totalAnswered = 0;
     answers = new Array(TOTAL_QUESTIONS).fill(null); // Инициализируем массив ответов
-
+    answerTimes = new Array(TOTAL_QUESTIONS).fill(0); // Инициализируем массив времени ответов
+    fastAnswersCount = 0;
+    
     // Скрываем элементы
     document.getElementById('Instruction').style.display = 'none';
     document.getElementById('Start_button').style.display = 'none';
@@ -89,16 +97,44 @@ function start_test() {
             autoplay: false,
             swipe: true
         });
+        
+        // Отслеживаем смену слайда (вопросов)
+        sliderEl.addEventListener('slider.change', function() {
+            // Запоминаем время начала ответа на новый вопрос
+            questionStartTime = Date.now();
+        });
     }
+    
+    // Устанавливаем время начала ответа на первый вопрос
+    questionStartTime = Date.now();
 
     // Отслеживание ответов
     const form = document.getElementById('test');
     form.addEventListener('change', (event) => {
         if (event.target.classList.contains('question_inp')) {
+            const currentTime = Date.now();
+            const timeSpent = currentTime - questionStartTime;
+            
             const questionName = event.target.name; // Например, "q1", "q2"
             const questionNumber = parseInt(questionName.replace('q', '')) - 1;
             const selectedIndex = Array.from(form.elements[questionName]).indexOf(event.target);
 
+            // Сохраняем время ответа на вопрос
+            answerTimes[questionNumber] = timeSpent;
+            
+            // Проверяем на быстрый ответ
+            if (timeSpent < FAST_ANSWER_THRESHOLD) {
+                fastAnswersCount++;
+                
+                // Показываем предупреждение после определенного количества быстрых ответов
+                if (fastAnswersCount === WARNING_THRESHOLD) {
+                    k++
+                    showWarning();
+                }
+                if (fastAnswersCount>6){
+                    problem_finish();
+                }
+            }
             // Проверяем, был ли уже ответ на этот вопрос
             if (answers[questionNumber] !== null) {
                 // Если ранее ответ был правильным, уменьшаем счетчик
@@ -121,11 +157,43 @@ function start_test() {
             if (showProgress) {
                 updateProgress();
             }
+            
+            // Устанавливаем время начала ответа на следующий вопрос
+            questionStartTime = Date.now();
         }
     });
 
     // Устанавливаем таймер для автоматического завершения теста
     setTimeout(finish_test, testDuration);
+}
+
+function showWarning() {
+    const warningDiv = document.createElement('div');
+    warningDiv.id = 'speed-warning';
+    warningDiv.style.position = 'fixed';
+    warningDiv.style.top = '20px';
+    warningDiv.style.left = '50%';
+    warningDiv.style.transform = 'translateX(-50%)';
+    warningDiv.style.backgroundColor = 'rgba(255, 204, 0, 0.9)';
+    warningDiv.style.padding = '15px';
+    warningDiv.style.borderRadius = '5px';
+    warningDiv.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+    warningDiv.style.zIndex = '1000';
+    warningDiv.style.textAlign = 'center';
+    warningDiv.style.maxWidth = '80%';
+    warningDiv.innerHTML = `
+        <h3 style="margin-top: 0; color: #d32f2f;">Внимание!</h3>
+        <p style="margin-bottom: 0;">Вы отвечаете слишком быстро. Для лучших результатов рекомендуется внимательно читать вопросы и обдумывать ответы.</p>
+    `;
+    
+    document.body.appendChild(warningDiv);
+    
+    // Удаляем предупреждение через 5 секунд
+    setTimeout(() => {
+        if (document.body.contains(warningDiv)) {
+            document.body.removeChild(warningDiv);
+        }
+    }, 5000);
 }
 
 function updateTimer() {
@@ -148,6 +216,43 @@ function updateProgress() {
     progressElement.textContent = `Правильных: ${correctAnswers} из ${totalAnswered}`;
 }
 
+
+function problem_finish(){
+        clearInterval(timerInterval);
+
+    const form = document.getElementById('test');
+    let result = correctAnswers;
+
+    // Вычисляем проценты
+    const answeredPercentage = totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0;
+    const totalPercentage = Math.round((correctAnswers / TOTAL_QUESTIONS) * 100);
+    
+    // Вычисляем среднее время ответа
+    const answeredQuestions = answerTimes.filter(time => time > 0);
+    const averageTime = answeredQuestions.length > 0 
+        ? Math.round(answeredQuestions.reduce((sum, time) => sum + time, 0) / answeredQuestions.length / 1000) 
+        : 0;
+
+
+    // Формируем таблицу результатов
+    let resultsHTML = `
+        <h3 style="margin-top: 0; color: #d32f2f;">Внимание!</h3>
+        <p style="margin-bottom: 0; color: #d32f2f;">Вы отвечаете слишком быстро. Все ваши ответы обнулены, проходите тест заново!</p>
+    `;
+
+    document.getElementById('Timer').style.display = 'none';
+    document.getElementById('Progress').style.display = 'none';
+    document.getElementById('Final Result').style.display = 'block';
+    document.getElementById('Final Result').innerHTML = resultsHTML;
+    document.getElementById('Finish_button').style.display = 'none';
+    document.getElementById('container-voinarovsky').style.display = 'none';
+    document.getElementById('Retry').style.display = 'block';
+    document.getElementById('Retry').style.top = '10vh';
+
+    window.scroll(0, 0);
+}
+
+
 function finish_test() {
     clearInterval(timerInterval);
 
@@ -157,6 +262,13 @@ function finish_test() {
     // Вычисляем проценты
     const answeredPercentage = totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0;
     const totalPercentage = Math.round((correctAnswers / TOTAL_QUESTIONS) * 100);
+    
+    // Вычисляем среднее время ответа
+    const answeredQuestions = answerTimes.filter(time => time > 0);
+    const averageTime = answeredQuestions.length > 0 
+        ? Math.round(answeredQuestions.reduce((sum, time) => sum + time, 0) / answeredQuestions.length / 1000) 
+        : 0;
+
 
     // Формируем таблицу результатов
     let resultsHTML = `
@@ -166,20 +278,26 @@ function finish_test() {
                 Правильных ответов: <strong>${correctAnswers} из ${totalAnswered}</strong> 
                 (${answeredPercentage}% от отвеченных, ${totalPercentage}% от общего)
             </div>
+            <div style="margin-bottom: 20px; font-size: 18px; color: black;">
+                Среднее время на вопрос: <strong>${averageTime} секунд</strong>
+            </div>
             <table class="results-table">
                 <tr>
                     <th style="color: black;">Вопрос</th>
                     <th style="color: black;">Статус</th>
+                    <th style="color: black;">Время</th>
                 </tr>
     `;
 
     answers.forEach((answer, index) => {
         if (answer !== null) {
             const isCorrect = answer === TRUE_RESULT[index * 3 + answer + 1];
+            const timeSpent = Math.round(answerTimes[index] / 1000);
             resultsHTML += `
                 <tr style="color: black;">
                     <td style="color: black;">Вопрос ${index + 1}</td>
                     <td style="color: black;">${isCorrect ? 'Правильно' : 'Неправильно'}</td>
+                    <td style="color: black;">${timeSpent} сек</td>
                 </tr>
             `;
         }
