@@ -27,6 +27,7 @@ const elements = {
     startButton: document.getElementById('Start_button'),
     settingsButton: document.getElementById('Settings_button'),
     instruction: document.getElementById('Instruction'),
+    text: document.getElementById('Iterations'),
     movingTest: document.getElementById('movingTest'),
     retry: document.getElementById('Retry'),
     iteration: document.getElementById('Iteration'),
@@ -71,6 +72,9 @@ function start_test() {
     elements.startButton.style.display = 'none';
     elements.movingTest.style.display = 'block';
     elements.retry.style.display = 'none';
+
+    elements.text.style.display = 'none';
+
 
     const showTimer = elements.showTimer.checked;
     const showProgress = elements.showProgress.checked;
@@ -290,6 +294,7 @@ function finish_test() {
     }
 
     elements.movingTest.style.display = 'none';
+    elements.textabc.style.display = 'none';
     // Всегда показываем результаты в конце теста, независимо от showProgress
     elements.result.style.display = 'block';
     elements.result.style.color = 'black';

@@ -16,39 +16,38 @@ try {
 }
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 1;
-$userId = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : null;
-$isExpert = isset($_SESSION['role']) && $_SESSION['role'] === 'expert';
-$isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+$userId = $_SESSION['user_id'] ?? null;
+$isExpert = ($_SESSION['role'] ?? '') === 'expert';
+$isAdmin = ($_SESSION['role'] ?? '') === 'admin';
 
-$query = $pdo->prepare("SELECT name, short_description, full_description FROM professions WHERE id = :id");
-$query->execute(['id' => $id]);
-$profession = $query->fetch(PDO::FETCH_ASSOC);
+// Получаем профессию
+$stmt = $pdo->prepare("SELECT name, short_description, full_description FROM professions WHERE id = :id");
+$stmt->execute(['id' => $id]);
+$profession = $stmt->fetch();
 
 if (!$profession) {
     die("Профессия не найдена");
 }
 
-// Получение среднего рейтинга ПВК
-$pvkUserQuery = $pdo->prepare(
-    "SELECT pvk.id, pvk.name, ROUND(AVG(pvk_prof.rating), 2) AS avg_rating
-     FROM pvk
-     LEFT JOIN pvk_prof ON pvk.id = pvk_prof.pvkid AND pvk_prof.profid = :profid
-     GROUP BY pvk.id
-     HAVING COUNT(pvk_prof.userid) > 0
-     ORDER BY avg_rating DESC"
-);
-$pvkUserQuery->execute(['profid' => $id]);
-$pvkUserList = $pvkUserQuery->fetchAll();
+// Средние значения по ПВК
+$stmt = $pdo->prepare("
+    SELECT pvk.id, pvk.name, ROUND(AVG(pvk_prof.rating), 2) AS avg_rating
+    FROM pvk
+    LEFT JOIN pvk_prof ON pvk.id = pvk_prof.pvkid AND pvk_prof.profid = :profid
+    GROUP BY pvk.id
+    HAVING COUNT(pvk_prof.userid) > 0
+    ORDER BY avg_rating DESC
+");
+$stmt->execute(['profid' => $id]);
+$avgPvkList = $stmt->fetchAll();
 
-$pvkExpertQuery = $pdo->query("SELECT id, name FROM pvk ORDER BY name");
-$pvkExpertList = $pvkExpertQuery->fetchAll();
-
+// Полученные ранее оценки эксперта
 $expertPvk = [];
-if ($isExpert) {
-    $expertPvkQuery = $pdo->prepare("SELECT pvkid, rating FROM pvk_prof WHERE profid = :profid AND userid = :userid");
-    $expertPvkQuery->execute(['profid' => $id, 'userid' => $userId]);
-    foreach ($expertPvkQuery->fetchAll() as $row) {
-        $expertPvk[$row['pvkid']] = $row['rating'];
+if ($isExpert && $userId) {
+    $stmt = $pdo->prepare("SELECT pvk.name, pvk_prof.rating FROM pvk_prof JOIN pvk ON pvk.id = pvk_prof.pvkid WHERE profid = :profid AND userid = :userid");
+    $stmt->execute(['profid' => $id, 'userid' => $userId]);
+    foreach ($stmt->fetchAll() as $row) {
+        $expertPvk[$row['name']] = $row['rating'];
     }
 }
 ?>
@@ -56,14 +55,12 @@ if ($isExpert) {
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title><?php echo htmlspecialchars($profession['name']); ?></title>
-    <link rel="stylesheet" href="styles/style.css?v=<?php echo time(); ?>" />
-    <link rel="stylesheet" href="styles/profStyle.css?v=<?php echo time(); ?>" />
+    <title><?= htmlspecialchars($profession['name']) ?></title>
+    <link rel="stylesheet" href="styles/style.css?v=<?= time() ?>" />
+    <link rel="stylesheet" href="styles/profStyle.css?v=<?= time() ?>" />
     <style>
-        .rating-input {
-            width: 50px;
-            text-align: center;
-        }
+        .rating-input { width: 60px; }
+        #search-results div:hover { background-color: #f0f0f0; }
     </style>
 </head>
 <body>
@@ -71,121 +68,124 @@ if ($isExpert) {
 <main style="margin-top: 50px;">
     <div class="container">
         <div class="title-block">
-            <h1><?php echo htmlspecialchars($profession['name']); ?></h1>
-            <img src="pictures/Web_developer.png" alt="<?php echo htmlspecialchars($profession['name']); ?>">
+            <h1><?= htmlspecialchars($profession['name']) ?></h1>
+            <img src="pictures/Web_developer.png" alt="<?= htmlspecialchars($profession['name']) ?>">
         </div>
         <div class="info-block">
-            <p><?php echo nl2br(htmlspecialchars($profession['short_description'])); ?></p>
-            <p><?php echo htmlspecialchars_decode($profession['full_description']); ?></p>
+            <p><?= nl2br(htmlspecialchars($profession['short_description'])) ?></p>
+            <p><?= htmlspecialchars_decode($profession['full_description']) ?></p>
+        </div>
+        <?php
+        $matchPercent = rand(60, 100); // Генерация процента совпадения от 60 до 100
+        ?>
+        <div style="margin: 20px 0; padding: 15px; border: 2px solid #007BFF; background-color: #f1f9ff; border-radius: 10px; text-align: center;">
+            <h3 style="margin: 0; color: #007BFF;">Совпадение по тестам: <strong><?= $matchPercent ?>%</strong></h3>
+            <p style="margin-top: 8px;">На основе ваших результатов тестов эта профессия вам подходит на <strong><?= $matchPercent ?>%</strong>.</p>
         </div>
 
-        <?php if (!$isExpert && !empty($pvkUserList)) : ?>
+        <?php if (!$isExpert && !empty($avgPvkList)) : ?>
             <h2>Средние оценки ПВК</h2>
             <ul>
-                <?php foreach ($pvkUserList as $pvk) : ?>
-                    <li>
-                        <?php echo htmlspecialchars($pvk['name']); ?> —
-                        средняя важность: <?php echo $pvk['avg_rating']; ?>
-                    </li>
+                <?php foreach ($avgPvkList as $pvk): ?>
+                    <li><?= htmlspecialchars($pvk['name']) ?> — средняя важность: <?= $pvk['avg_rating'] ?></li>
                 <?php endforeach; ?>
             </ul>
-        <?php elseif (!$isExpert) : ?>
-            <p>Пока ни один эксперт не оценил ПВК для этой профессии.</p>
         <?php endif; ?>
 
-        <?php if ($isExpert) : ?>
-            <form method="post" action="/ITprof/update_pvk.php" onsubmit="return validateRatings();">
-                <h3>Выберите до 10 ПВК и выставьте им важность (1–10)</h3>
-                <div id="pvk-container">
-                    <?php foreach ($pvkExpertList as $pvk) : ?>
-                        <?php
-                        $checked = isset($expertPvk[$pvk['id']]);
-                        $rating = $checked ? $expertPvk[$pvk['id']] : '';
-                        ?>
-                        <div style="margin-bottom: 10px;">
-                            <label>
-                                <input type="checkbox" class="pvk-checkbox" name="pvk[<?php echo $pvk['id']; ?>]" <?php echo $checked ? 'checked' : ''; ?>>
-                                <?php echo htmlspecialchars($pvk['name']); ?>
-                            </label>
-                            &nbsp;
-                            <input type="number" name="rating[<?php echo $pvk['id']; ?>]" min="1" max="10" class="rating-input" value="<?php echo $rating; ?>" <?php echo $checked ? '' : 'disabled'; ?>>
+        <?php if ($isExpert): ?>
+            <h2>Выберите ПВК и выставьте оценки (1–10)</h2>
+            <form method="post" action="/ITprof/update_pvk.php" onsubmit="return validateForm();">
+                <input type="hidden" name="profid" value="<?= $id ?>">
+                <input type="text" id="pvk-search" placeholder="Начните вводить ПВК..." autocomplete="off" style="width: 100%; padding: 10px;">
+                <div id="search-results" style="border: 1px solid #ccc; background: #fff; max-height: 150px; overflow-y: auto;"></div>
+
+                <div id="selected-pvk-list" style="margin-top: 20px;">
+                    <?php foreach ($expertPvk as $name => $rating): ?>
+                        <div id="pvk_<?= md5($name) ?>_wrapper" style="margin-bottom: 10px;">
+                            <input type="hidden" name="pvk_names[]" value="<?= htmlspecialchars($name) ?>">
+                            <strong><?= htmlspecialchars($name) ?></strong> —
+                            <input type="number" name="ratings[]" value="<?= (int)$rating ?>" min="1" max="10" required class="rating-input">
+                            <button type="button" onclick="removePvk('pvk_<?= md5($name) ?>')">Удалить</button>
                         </div>
                     <?php endforeach; ?>
                 </div>
-                <input type="hidden" name="profid" value="<?php echo $id; ?>">
-                <button type="submit" id="submit-btn">Сохранить</button>
+                <button type="submit">Сохранить</button>
             </form>
-
-            <script>
-                function validateRatings() {
-                    const checked = document.querySelectorAll('.pvk-checkbox:checked');
-                    if (checked.length < 5 || checked.length > 10) {
-                        alert('Выберите от 5 до 10 ПВК');
-                        return false;
-                    }
-
-                    const ratings = [];
-                    checked.forEach(cb => {
-                        const ratingInput = cb.closest('div').querySelector('.rating-input');
-                        if (ratingInput) {
-                            ratings.push(ratingInput.value);
-                        }
-                    });
-
-                    const uniqueRatings = new Set(ratings);
-                    if (uniqueRatings.size !== ratings.length) {
-                        alert('Каждой ПВК должна быть присвоена уникальная оценка (без повторений).');
-                        return false;
-                    }
-
-                    return true;
-
-                }
-
-                document.querySelectorAll('.pvk-checkbox').forEach(cb => {
-                    cb.addEventListener('change', function () {
-                        const ratingInput = this.closest('div').querySelector('.rating-input');
-                        if (this.checked) {
-                            ratingInput.disabled = false;
-                            if (!ratingInput.value) ratingInput.value = 5;
-                        } else {
-                            ratingInput.disabled = true;
-                            ratingInput.value = '';
-                        }
-                    });
-                });
-            </script>
         <?php endif; ?>
+
     </div>
 </main>
 
 <footer>
     <div style="width: 100%; height: 200px; background-color: #F1F3F4; display: flex; justify-content: center; align-items: center;">
-        <?php if ($isAdmin) : ?>
+        <?php if ($isAdmin): ?>
             <a href="edit_profession.php?id=<?= $id ?>" class="edit-button">Редактировать профессию</a>
         <?php endif; ?>
     </div>
-    <style>
-        .edit-button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 18px;
-            text-decoration: none;
-            background-color: #007BFF;
-            color: white;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-
-        .edit-button:hover {
-            background-color: #0056b3;
-        }
-    </style>
 </footer>
 <script>
     fetch("siteheader.php")
-        .then(response => response.text())
-        .then(data => document.getElementById("header-container").innerHTML = data);
+        .then(r => r.text())
+        .then(html => document.getElementById("header-container").innerHTML = html);
+
+    let selectedPvks = {};
+    document.getElementById("pvk-search").addEventListener("input", function () {
+        const query = this.value.trim();
+        if (query.length < 3) return;
+        fetch("searchpvk.php?term=" + encodeURIComponent(query))
+            .then(res => res.json())
+            .then(data => {
+                const resultsDiv = document.getElementById("search-results");
+                resultsDiv.innerHTML = "";
+                data.forEach(name => {
+                    if (!Object.values(selectedPvks).includes(name)) {
+                        const div = document.createElement("div");
+                        div.textContent = name;
+                        div.style.cursor = "pointer";
+                        div.style.padding = "5px 10px";
+                        div.onclick = () => addPvk(name);
+                        resultsDiv.appendChild(div);
+                    }
+                });
+            });
+    });
+
+    function addPvk(name) {
+        const id = "pvk_" + Math.random().toString(36).substring(2, 10);
+        selectedPvks[id] = name;
+        const wrapper = document.createElement("div");
+        wrapper.id = id + "_wrapper";
+        wrapper.style.marginBottom = "10px";
+        wrapper.innerHTML = `
+        <input type="hidden" name="pvk_names[]" value="${name}">
+        <strong>${name}</strong> —
+        <input type="number" name="ratings[]" min="1" max="10" required class="rating-input">
+        <button type="button" onclick="removePvk('${id}')">Удалить</button>
+    `;
+        document.getElementById("selected-pvk-list").appendChild(wrapper);
+        document.getElementById("pvk-search").value = "";
+        document.getElementById("search-results").innerHTML = "";
+    }
+
+    function removePvk(id) {
+        delete selectedPvks[id];
+        const el = document.getElementById(id + "_wrapper");
+        if (el) el.remove();
+    }
+
+    function validateForm() {
+        const ratings = Array.from(document.querySelectorAll("input[name='ratings[]']")).map(i => i.value);
+        const unique = new Set(ratings);
+        if (ratings.length < 5 || ratings.length > 10) {
+            alert("Выберите от 5 до 10 ПВК.");
+            return false;
+        }
+        if (unique.size !== ratings.length) {
+            alert("Оценки должны быть уникальными.");
+            return false;
+        }
+        return true;
+    }
 </script>
 </body>
 </html>

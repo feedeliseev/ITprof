@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Поиск ПВК</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 30px;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+        }
+        ul#suggestions {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 10px;
+            width: 300px;
+            border: 1px solid #ccc;
+        }
+        ul#suggestions li {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        ul#suggestions li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Поиск по ПВК</h2>
+<input type="text" id="search" placeholder="Введите ПВК..." autocomplete="off">
+<ul id="suggestions"></ul>
+
+<script>
+    document.getElementById('search').addEventListener('input', function () {
+        const term = this.value.trim();
+        const list = document.getElementById('suggestions');
+        list.innerHTML = '';
+
+        if (term.length < 3) return; // Минимум 3 символа
+
+        fetch(`searchpvk.php?term=${encodeURIComponent(term)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    data.forEach(item => {
+                        const li = document.createElement('li');
+                        li.textContent = item;
+                        li.addEventListener('click', () => {
+                            document.getElementById('search').value = item;
+                            list.innerHTML = '';
+                        });
+                        list.appendChild(li);
+                    });
+                }
+            })
+            .catch(err => {
+                console.error('Ошибка:', err);
+            });
+    });
+</script>
+
+</body>
+</html>

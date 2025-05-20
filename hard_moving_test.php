@@ -17,6 +17,7 @@ $testId = 7; // ID для hard_moving_test
         const USER_ID = <?= (int)$userId ?>;
         const TEST_ID = <?= (int)$testId ?>;
     </script>
+
 </head>
 <body>
 <div id="bg" class="bg_img">
@@ -27,10 +28,13 @@ $testId = 7; // ID для hard_moving_test
 
     </div>
     <div class="tester">
-        <div id='Instruction' class="instruction text_instruction">
+        <div id='Instruction' class="instruction text_instruction instr">
             Этот тест считывает скорость реакции на движущийся объект. Ваша цель — нажимать на клавиши
             <b style="color: green">A</b>, <b style="color: red">S</b> или <b style="color: purple">D</b> —
             когда зелёный, красный или фиолетовый круг соответственно совпадёт с белым.
+        </div>
+        <div id='Iterations' class="instruction text_instruction">
+            <b style="color: green">A</b>, <b style="color: red">S</b> или <b style="color: purple">D</b>
         </div>
         <div id='Iteration' class="iteration"></div>
         <button id='Settings_button' class="settings_button" onclick="showSettings()">Настройки</button>
@@ -84,13 +88,14 @@ $testId = 7; // ID для hard_moving_test
             <div class="moving-test__moving-dot-wrapper moving-test__moving-dot-wrapper_speed_high" id='fastMovingDot'>
                 <div class="moving-test__moving-dot" style="background-color: purple"></div>
             </div>
+
             <div class="moving-test__fixed-dot" id="fixedDot"></div>
             <div class="moving-test__fixed-dot1" id="fixedDot1"></div>
             <div class="moving-test__fixed-dot2" id="fixedDot2"></div>
         </div>
         <div id='Result' class="result"></div>
         <a href="dashboard.php" class="restart_button" id='Resultcab'>Все результаты</a>
-        <a href="/hard_moving_test.php" class="restart_button" id='Retry'>Заново</a>
+        <a href="hard_moving_test.php" class="restart_button" id='Retry'>Заново</a>
     </div>
 </div>
 <script src="hard_moving_test.js"></script>
