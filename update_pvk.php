@@ -21,31 +21,36 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'expert') {
 
 $userId = $_SESSION['user_id'];
 $profId = isset($_POST['profid']) ? intval($_POST['profid']) : 0;
-$selectedPvk = isset($_POST['pvk']) ? $_POST['pvk'] : [];
-$ratings = isset($_POST['rating']) ? $_POST['rating'] : [];
+$names = isset($_POST['pvk_names']) ? $_POST['pvk_names'] : [];
+$ratings = isset($_POST['ratings']) ? $_POST['ratings'] : [];
 
-if ($profId === 0) {
-    die("Ошибка: неверный идентификатор профессии");
+if (count($names) !== count($ratings)) {
+    die("Ошибка: несоответствие данных");
 }
 
-if (count($selectedPvk) < 5 || count($selectedPvk) > 10) {
-    die("Ошибка: выберите от 5 до 10 ПВК.");
+if (count($names) < 5 || count($names) > 10) {
+    die("Выберите от 5 до 10 ПВК");
 }
 
-// Удалить предыдущие оценки этого эксперта
-$deleteStmt = $pdo->prepare("DELETE FROM pvk_prof WHERE profid = :profid AND userid = :userid");
-$deleteStmt->execute(['profid' => $profId, 'userid' => $userId]);
+// Получение ID по имени
+$getIdStmt = $pdo->prepare("SELECT id FROM pvk WHERE name = :name");
 
-// Вставить новые
+// Удаляем старые
+$pdo->prepare("DELETE FROM pvk_prof WHERE profid = :profid AND userid = :userid")
+    ->execute(['profid' => $profId, 'userid' => $userId]);
+
 $insertStmt = $pdo->prepare("INSERT INTO pvk_prof (pvkid, profid, userid, rating) VALUES (:pvkid, :profid, :userid, :rating)");
 
-foreach ($selectedPvk as $pvkId => $on) {
-    $rating = isset($ratings[$pvkId]) ? intval($ratings[$pvkId]) : 0;
-    if ($rating < 1 || $rating > 10) {
-        continue; // пропускаем недопустимые значения
-    }
+foreach ($names as $i => $name) {
+    $rating = intval($ratings[$i]);
+    if ($rating < 1 || $rating > 10) continue;
+
+    $getIdStmt->execute(['name' => $name]);
+    $pvk = $getIdStmt->fetch();
+    if (!$pvk) continue;
+
     $insertStmt->execute([
-        'pvkid' => $pvkId,
+        'pvkid' => $pvk['id'],
         'profid' => $profId,
         'userid' => $userId,
         'rating' => $rating
